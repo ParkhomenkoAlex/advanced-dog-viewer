@@ -22,7 +22,7 @@ function App() {
 
             {isLoading && <p>Loading dogs...</p>}
 
-            {error && <p className={styles.error}>{error}</p>}
+            {error && <p className={styles.error}>{error.message}</p>}
 
             {!isLoading && !error && (
                 <div className={styles.layout}>

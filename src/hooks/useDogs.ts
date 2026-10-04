@@ -1,32 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getRandomDogs } from '../api/dogs';
-import type { Dog } from '../types/dog';
 
 export function useDogs(count: number) {
-    const [dogs, setDogs] = useState<Dog[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        async function loadDogs() {
-            try {
-                const dogs = await getRandomDogs(count);
-
-                setDogs(dogs);
-            } catch (error) {
-                console.error(error);
-                setError('Failed to load dogs. Please try again later.');
-            } finally {
-                setIsLoading(false);
-            }
-        }
-
-        void loadDogs();
-    }, [count]);
+    const {
+        data: dogs = [],
+        isLoading,
+        error,
+        refetch,
+    } = useQuery({
+        queryKey: ['dogs', count],
+        queryFn: () => getRandomDogs(count),
+    });
 
     return {
         dogs,
         isLoading,
         error,
+        refreshDogs: refetch,
     };
 }
