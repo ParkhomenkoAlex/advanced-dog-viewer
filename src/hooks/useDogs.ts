@@ -1,10 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { getRandomDogs } from '../api/dogs';
+import { getDogs } from '../api/dogs';
+import type { DogFilters } from '../types/dog';
 
-export function useDogs(count: number) {
+export function useDogs(filters: DogFilters) {
     const dogsQuery = useQuery({
-        queryKey: ['dogs', count],
-        queryFn: () => getRandomDogs(count),
+        queryKey: ['dogs', filters],
+        queryFn: () => getDogs(filters),
+        refetchOnWindowFocus: false,
     });
 
     return {
