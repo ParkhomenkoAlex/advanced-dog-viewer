@@ -27,8 +27,13 @@ function App() {
         subBreed: selectedSubBreed,
     });
 
-    const { favorites, addFavorite, removeFavorite, isFavorite } =
-        useFavorites();
+    const {
+        favorites,
+        addFavorite,
+        removeFavorite,
+        clearFavorites,
+        isFavorite,
+    } = useFavorites();
 
     const currentDog = selectedDog ?? dogs[0] ?? null;
 
@@ -131,6 +136,7 @@ function App() {
                         favorites={favorites}
                         onSelectDog={setSelectedDog}
                         onRemoveFavorite={removeFavorite}
+                        onClearFavorites={clearFavorites}
                     />
                 </div>
             )}
