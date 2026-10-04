@@ -1,15 +1,31 @@
 import { useState } from 'react';
+import DogFilters from './components/DogFilters/DogFilters';
 import DogGallery from './components/DogGallery/DogGallery';
 import Favorites from './components/Favorites/Favorites';
 import MainDog from './components/MainDog/MainDog';
+import { useBreeds } from './hooks/useBreeds';
 import { useDogs } from './hooks/useDogs';
 import { useFavorites } from './hooks/useFavorites';
 import type { Dog } from './types/dog';
 import styles from './App.module.css';
 
 function App() {
-    const { dogs, isLoading, isFetching, error, refreshDogs } = useDogs(10);
     const [selectedDog, setSelectedDog] = useState<Dog | null>(null);
+    const [selectedBreed, setSelectedBreed] = useState('');
+    const [selectedSubBreed, setSelectedSubBreed] = useState('');
+    const [dogCount, setDogCount] = useState(10);
+
+    const {
+        breeds,
+        isLoading: isLoadingBreeds,
+        error: breedsError,
+    } = useBreeds();
+
+    const { dogs, isLoading, isFetching, error, refreshDogs } = useDogs({
+        count: dogCount,
+        breed: selectedBreed,
+        subBreed: selectedSubBreed,
+    });
 
     const { favorites, addFavorite, removeFavorite, isFavorite } =
         useFavorites();
@@ -19,6 +35,29 @@ function App() {
     function handleRefreshDogs() {
         setSelectedDog(null);
         void refreshDogs();
+    }
+
+    function handleBreedChange(breed: string) {
+        setSelectedBreed(breed);
+        setSelectedSubBreed('');
+        setSelectedDog(null);
+    }
+
+    function handleSubBreedChange(subBreed: string) {
+        setSelectedSubBreed(subBreed);
+        setSelectedDog(null);
+    }
+
+    function handleDogCountChange(count: number) {
+        setDogCount(count);
+        setSelectedDog(null);
+    }
+
+    function handleResetFilters() {
+        setSelectedBreed('');
+        setSelectedSubBreed('');
+        setDogCount(10);
+        setSelectedDog(null);
     }
 
     return (
@@ -44,9 +83,31 @@ function App() {
                 </button>
             </div>
 
-            {isLoading && <p>Loading dogs...</p>}
+            <DogFilters
+                breeds={breeds}
+                selectedBreed={selectedBreed}
+                selectedSubBreed={selectedSubBreed}
+                dogCount={dogCount}
+                isLoadingBreeds={isLoadingBreeds}
+                onBreedChange={handleBreedChange}
+                onSubBreedChange={handleSubBreedChange}
+                onDogCountChange={handleDogCountChange}
+                onResetFilters={handleResetFilters}
+            />
 
-            {error && <p className={styles.error}>{error.message}</p>}
+            {breedsError && (
+                <p className={styles.error} role="alert">
+                    Failed to load breeds: {breedsError.message}
+                </p>
+            )}
+
+            {isLoading && <p aria-live="polite">Loading dogs...</p>}
+
+            {error && (
+                <p className={styles.error} role="alert">
+                    Failed to load dogs: {error.message}
+                </p>
+            )}
 
             {!isLoading && !error && (
                 <div className={styles.layout}>

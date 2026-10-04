@@ -44,6 +44,12 @@
     border-color: #1976d2;
 }
 
+.refreshButton:focus-visible {
+    outline: none;
+    border-color: #1976d2;
+    box-shadow: 0 0 0 3px rgb(25 118 210 / 12%);
+}
+
 .refreshButton:disabled {
     cursor: default;
 }
@@ -64,6 +70,7 @@
 }
 
 .error {
+    margin: 16px 0;
     color: #c62828;
 }
 
