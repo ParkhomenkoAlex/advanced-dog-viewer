@@ -1,0 +1,29 @@
+.app {
+  width: 100%;
+  padding: 32px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 32px;
+  align-items: start;
+}
+
+.content {
+  min-width: 0;
+}
+
+.error {
+  color: #c62828;
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding: 16px;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

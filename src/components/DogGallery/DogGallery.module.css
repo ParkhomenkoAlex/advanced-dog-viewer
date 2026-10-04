@@ -1,0 +1,49 @@
+.dogGallery {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.dogThumbnail {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dogThumbnail img {
+  display: block;
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+  transition: transform 0.2s ease;
+}
+
+.dogThumbnail:hover img {
+  transform: scale(1.05);
+}
+
+.dogThumbnail span {
+  display: block;
+  margin-top: 8px;
+  text-transform: capitalize;
+}
+
+.selected {
+  border-color: #222;
+  box-shadow: 0 0 0 1px #222;
+}
+
+@media (max-width: 768px) {
+  .dogGallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

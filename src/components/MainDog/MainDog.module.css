@@ -1,0 +1,66 @@
+.mainDog {
+  margin-bottom: 32px;
+}
+
+.mainDog img {
+  display: block;
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.mainDog h2 {
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.favoriteButton {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  color: #555;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.favoriteButton svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.favoriteButton:hover {
+  color: #d89b00;
+  background: #fff8d6;
+  border-color: #e6b800;
+}
+
+.favoriteButton.favorite {
+  color: #d89b00;
+  background: #fff3b0;
+  border-color: #e6b800;
+  cursor: default;
+}
+
+@media (max-width: 768px) {
+  .mainDog img {
+    height: 280px;
+  }
+}
