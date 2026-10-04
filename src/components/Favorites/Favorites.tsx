@@ -6,19 +6,38 @@ interface FavoritesProps {
     favorites: Dog[];
     onSelectDog: (dog: Dog) => void;
     onRemoveFavorite: (dog: Dog) => void;
+    onClearFavorites: () => void;
 }
 
 function Favorites({
     favorites,
     onSelectDog,
     onRemoveFavorite,
+    onClearFavorites,
 }: FavoritesProps) {
     return (
         <aside className={styles.favorites}>
-            <h2>Favorites</h2>
+            <div className={styles.header}>
+                <h2>
+                    Favorites
+                    <span className={styles.count}>{favorites.length}</span>
+                </h2>
+
+                <button
+                    className={styles.clearButton}
+                    type="button"
+                    onClick={onClearFavorites}
+                    disabled={favorites.length === 0}
+                >
+                    Clear all
+                </button>
+            </div>
 
             {favorites.length === 0 ? (
-                <p>No favorites yet.</p>
+                <div className={styles.emptyState}>
+                    <p>No favorites yet.</p>
+                    <span>Choose a dog and save it here.</span>
+                </div>
             ) : (
                 <ul className={styles.list}>
                     {favorites.map((dog) => (
