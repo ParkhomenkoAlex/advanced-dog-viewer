@@ -1,9 +1,9 @@
 export interface Dog {
-  imageUrl: string;
-  breed: string;
+    imageUrl: string;
+    breed: string;
 }
 
 export interface DogsResponse {
-  message: string[];
-  status: string;
+    message: string[];
+    status: string;
 }
