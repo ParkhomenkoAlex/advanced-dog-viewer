@@ -36,6 +36,12 @@ function App() {
     } = useFavorites();
 
     const currentDog = selectedDog ?? dogs[0] ?? null;
+    const currentDogIndex = currentDog
+        ? dogs.findIndex((dog) => dog.imageUrl === currentDog.imageUrl)
+        : -1;
+    const isPreviousDogDisabled = currentDogIndex <= 0;
+    const isNextDogDisabled =
+        currentDogIndex === -1 || currentDogIndex === dogs.length - 1;
 
     function handleRefreshDogs() {
         setSelectedDog(null);
@@ -63,6 +69,22 @@ function App() {
         setSelectedSubBreed('');
         setDogCount(10);
         setSelectedDog(null);
+    }
+
+    function handlePreviousDog() {
+        if (currentDogIndex <= 0) {
+            return;
+        }
+
+        setSelectedDog(dogs[currentDogIndex - 1]);
+    }
+
+    function handleNextDog() {
+        if (currentDogIndex === -1 || currentDogIndex >= dogs.length - 1) {
+            return;
+        }
+
+        setSelectedDog(dogs[currentDogIndex + 1]);
     }
 
     return (
@@ -122,6 +144,10 @@ function App() {
                                 dog={currentDog}
                                 isFavorite={isFavorite(currentDog)}
                                 onToggleFavorite={toggleFavorite}
+                                onPreviousDog={handlePreviousDog}
+                                onNextDog={handleNextDog}
+                                isPreviousDogDisabled={isPreviousDogDisabled}
+                                isNextDogDisabled={isNextDogDisabled}
                             />
                         )}
 
