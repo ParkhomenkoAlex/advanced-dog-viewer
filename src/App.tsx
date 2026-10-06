@@ -29,8 +29,8 @@ function App() {
 
     const {
         favorites,
-        addFavorite,
         removeFavorite,
+        toggleFavorite,
         clearFavorites,
         isFavorite,
     } = useFavorites();
@@ -121,7 +121,7 @@ function App() {
                             <MainDog
                                 dog={currentDog}
                                 isFavorite={isFavorite(currentDog)}
-                                onAddToFavorites={addFavorite}
+                                onToggleFavorite={toggleFavorite}
                             />
                         )}
 
