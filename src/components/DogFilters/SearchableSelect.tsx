@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { ChevronDown, Search } from 'lucide-react';
 import styles from './SearchableSelect.module.css';
 
 export interface ISearchableSelectOption {
@@ -11,7 +12,8 @@ interface ISearchableSelectProps {
     label: string;
     value: string;
     options: ISearchableSelectOption[];
-    allOptionLabel: string;
+    allOptionLabel?: string;
+    isSearchable?: boolean;
     disabled?: boolean;
     onChange: (value: string) => void;
 }
@@ -22,6 +24,7 @@ function SearchableSelect({
     value,
     options,
     allOptionLabel,
+    isSearchable = true,
     disabled = false,
     onChange,
 }: ISearchableSelectProps) {
@@ -70,13 +73,15 @@ function SearchableSelect({
 
         document.addEventListener('pointerdown', handlePointerDown);
         document.addEventListener('keydown', handleKeyDown);
-        searchInputRef.current?.focus();
+        if (isSearchable) {
+            searchInputRef.current?.focus();
+        }
 
         return () => {
             document.removeEventListener('pointerdown', handlePointerDown);
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [isOpen]);
+    }, [isOpen, isSearchable]);
 
     return (
         <div ref={selectRef} className={styles.select}>
@@ -93,39 +98,46 @@ function SearchableSelect({
                 onClick={() => setIsOpen((currentIsOpen) => !currentIsOpen)}
             >
                 <span>{selectedOption?.label ?? allOptionLabel}</span>
-                <svg viewBox="0 0 16 16" aria-hidden="true">
-                    <path d="m4 6 4 4 4-4" />
-                </svg>
+                <ChevronDown aria-hidden="true" />
             </button>
 
             {isOpen && (
                 <div className={styles.dropdown}>
-                    <input
-                        ref={searchInputRef}
-                        className={styles.search}
-                        type="search"
-                        placeholder={`Search ${label.toLowerCase()}...`}
-                        aria-label={`Search ${label.toLowerCase()}`}
-                        value={searchTerm}
-                        onChange={(event) => setSearchTerm(event.target.value)}
-                    />
+                    {isSearchable && (
+                        <div className={styles.searchField}>
+                            <Search aria-hidden="true" />
+                            <input
+                                ref={searchInputRef}
+                                className={styles.search}
+                                type="search"
+                                placeholder={`Search ${label.toLowerCase()}...`}
+                                aria-label={`Search ${label.toLowerCase()}`}
+                                value={searchTerm}
+                                onChange={(event) =>
+                                    setSearchTerm(event.target.value)
+                                }
+                            />
+                        </div>
+                    )}
 
                     <ul
                         id={listboxId}
                         className={styles.options}
                         role="listbox"
                     >
-                        <li>
-                            <button
-                                className={styles.option}
-                                type="button"
-                                role="option"
-                                aria-selected={value === ''}
-                                onClick={() => handleSelect('')}
-                            >
-                                {allOptionLabel}
-                            </button>
-                        </li>
+                        {allOptionLabel && (
+                            <li>
+                                <button
+                                    className={styles.option}
+                                    type="button"
+                                    role="option"
+                                    aria-selected={value === ''}
+                                    onClick={() => handleSelect('')}
+                                >
+                                    {allOptionLabel}
+                                </button>
+                            </li>
+                        )}
 
                         {filteredOptions.map((option) => (
                             <li key={option.value}>

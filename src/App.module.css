@@ -5,19 +5,42 @@
     padding: 20px clamp(20px, 3vw, 48px) 48px;
 }
 
+.heroComposition {
+    position: relative;
+    min-width: 0;
+}
+
 .header {
-    display: flex;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    min-height: 76px;
+    gap: 16px;
+    min-height: 60px;
     margin-bottom: 20px;
-    padding: 12px 16px 12px 20px;
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-panel);
-    background: rgb(21 24 29 / 72%);
-    box-shadow: var(--shadow-ambient);
-    backdrop-filter: blur(18px);
+    padding: 12px 24px;
+    border: 1px solid rgb(255 255 255 / 7%);
+    border-radius: 14px;
+    background: rgb(13 15 18 / 44%);
+    box-shadow: 0 16px 48px rgb(0 0 0 / 18%);
+    backdrop-filter: blur(20px) saturate(120%);
+}
+
+@media (min-width: 1101px) {
+    .hasHero .header {
+        position: absolute;
+        z-index: 3;
+        top: 0;
+        right: 0;
+        left: 0;
+        margin-bottom: 0;
+        border: 1px solid rgb(244 241 235 / 28%);
+        border-bottom: 0;
+        border-radius: 12px 12px 0 0;
+        background: rgb(13 15 18 / 18%);
+        box-shadow: none;
+    }
 }
 
 .wordmark {
@@ -38,18 +61,22 @@
 .headerActions {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+}
+
+.headerFilters {
+    min-width: 0;
 }
 
 .refreshButton {
     display: grid;
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
     flex-shrink: 0;
     padding: 0;
-    border: 1px solid var(--border-subtle);
+    border: 1px solid rgb(255 255 255 / 8%);
     border-radius: var(--radius-control);
-    background: rgb(13 15 18 / 72%);
+    background: rgb(13 15 18 / 28%);
     color: var(--text-primary);
     cursor: pointer;
     place-items: center;
@@ -68,13 +95,13 @@
 
 .favoritesTrigger {
     display: inline-flex;
-    min-height: 44px;
+    min-height: 42px;
     align-items: center;
     gap: 8px;
     padding: 0 10px 0 13px;
-    border: 1px solid rgb(215 174 99 / 55%);
+    border: 1px solid rgb(215 174 99 / 40%);
     border-radius: var(--radius-control);
-    background: rgb(215 174 99 / 8%);
+    background: rgb(215 174 99 / 4%);
     color: var(--text-primary);
     font: inherit;
     font-size: 14px;
@@ -108,7 +135,7 @@
 .refreshButton:hover:not(:disabled),
 .favoritesTrigger:hover {
     border-color: var(--accent);
-    background: rgb(215 174 99 / 14%);
+    background: rgb(215 174 99 / 10%);
     color: var(--accent-hover);
     transform: translateY(-1px);
 }
@@ -122,10 +149,6 @@
 .refreshButton:disabled {
     color: var(--text-subdued);
     cursor: not-allowed;
-}
-
-.filtersRegion {
-    margin-bottom: 32px;
 }
 
 .spinning {
@@ -202,6 +225,19 @@
     .app {
         padding-inline: 24px;
     }
+
+    .header {
+        grid-template-columns: auto 1fr;
+    }
+
+    .headerFilters {
+        grid-row: 2;
+        grid-column: 1 / -1;
+    }
+
+    .headerActions {
+        justify-self: end;
+    }
 }
 
 @media (max-width: 768px) {
@@ -211,8 +247,8 @@
 
     .header {
         gap: 12px;
-        min-height: 64px;
-        padding: 10px 12px 10px 14px;
+        min-height: 58px;
+        padding: 8px 10px 8px 14px;
     }
 
     .wordmark {
@@ -225,7 +261,7 @@
 
     .favoritesTrigger {
         position: relative;
-        width: 44px;
+        width: 42px;
         justify-content: center;
         padding: 0;
     }
@@ -241,9 +277,5 @@
         width: 18px;
         height: 18px;
         font-size: 10px;
-    }
-
-    .filtersRegion {
-        margin-bottom: 24px;
     }
 }

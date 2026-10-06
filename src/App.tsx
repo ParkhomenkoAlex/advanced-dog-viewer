@@ -60,6 +60,7 @@ function App() {
     const isPreviousDogDisabled = currentDogIndex <= 0;
     const isNextDogDisabled =
         currentDogIndex === -1 || currentDogIndex === dogs.length - 1;
+    const hasHero = !isLoading && !error && currentDog !== null;
 
     function handleRefreshDogs() {
         setSelectedDog(null);
@@ -115,56 +116,74 @@ function App() {
 
     return (
         <main className={styles.app}>
-            <header className={styles.header}>
-                <h1 className={styles.wordmark}>
-                    <span>Advanced</span>
-                    <span>Dog Viewer</span>
-                </h1>
+            <div
+                className={`${styles.heroComposition} ${
+                    hasHero ? styles.hasHero : ''
+                }`}
+            >
+                <header className={styles.header}>
+                    <h1 className={styles.wordmark}>
+                        <span>Advanced</span>
+                        <span>Dog Viewer</span>
+                    </h1>
 
-                <div className={styles.headerActions}>
-                    <button
-                        className={styles.refreshButton}
-                        type="button"
-                        aria-label="Refresh dogs"
-                        title="Refresh dogs"
-                        onClick={handleRefreshDogs}
-                        disabled={isFetching}
-                    >
-                        <RefreshCw
-                            className={isFetching ? styles.spinning : ''}
-                            aria-hidden="true"
+                    <div className={styles.headerFilters}>
+                        <DogFilters
+                            breeds={breeds}
+                            selectedBreed={selectedBreed}
+                            selectedSubBreed={selectedSubBreed}
+                            dogCount={dogCount}
+                            isLoadingBreeds={isLoadingBreeds}
+                            onBreedChange={handleBreedChange}
+                            onSubBreedChange={handleSubBreedChange}
+                            onDogCountChange={handleDogCountChange}
+                            onResetFilters={handleResetFilters}
                         />
-                    </button>
+                    </div>
 
-                    <button
-                        ref={favoritesTriggerRef}
-                        className={styles.favoritesTrigger}
-                        type="button"
-                        aria-label={`View favorites (${favorites.length})`}
-                        aria-haspopup="dialog"
-                        aria-expanded={isFavoritesOpen}
-                        aria-controls="favorites-drawer"
-                        onClick={() => setIsFavoritesOpen(true)}
-                    >
-                        <Heart aria-hidden="true" />
-                        <span>Favorites</span>
-                        <strong>{favorites.length}</strong>
-                    </button>
-                </div>
-            </header>
+                    <div className={styles.headerActions}>
+                        <button
+                            className={styles.refreshButton}
+                            type="button"
+                            aria-label="Refresh dogs"
+                            title="Refresh dogs"
+                            onClick={handleRefreshDogs}
+                            disabled={isFetching}
+                        >
+                            <RefreshCw
+                                className={isFetching ? styles.spinning : ''}
+                                aria-hidden="true"
+                            />
+                        </button>
 
-            <div className={styles.filtersRegion}>
-                <DogFilters
-                    breeds={breeds}
-                    selectedBreed={selectedBreed}
-                    selectedSubBreed={selectedSubBreed}
-                    dogCount={dogCount}
-                    isLoadingBreeds={isLoadingBreeds}
-                    onBreedChange={handleBreedChange}
-                    onSubBreedChange={handleSubBreedChange}
-                    onDogCountChange={handleDogCountChange}
-                    onResetFilters={handleResetFilters}
-                />
+                        <button
+                            ref={favoritesTriggerRef}
+                            className={styles.favoritesTrigger}
+                            type="button"
+                            aria-label={`View favorites (${favorites.length})`}
+                            aria-haspopup="dialog"
+                            aria-expanded={isFavoritesOpen}
+                            aria-controls="favorites-drawer"
+                            onClick={() => setIsFavoritesOpen(true)}
+                        >
+                            <Heart aria-hidden="true" />
+                            <span>Favorites</span>
+                            <strong>{favorites.length}</strong>
+                        </button>
+                    </div>
+                </header>
+
+                {hasHero && (
+                    <MainDog
+                        dog={currentDog}
+                        isFavorite={isFavorite(currentDog)}
+                        onToggleFavorite={toggleFavorite}
+                        onPreviousDog={handlePreviousDog}
+                        onNextDog={handleNextDog}
+                        isPreviousDogDisabled={isPreviousDogDisabled}
+                        isNextDogDisabled={isNextDogDisabled}
+                    />
+                )}
             </div>
 
             {breedsError && (
@@ -190,18 +209,6 @@ function App() {
             {!isLoading && !error && (
                 <div className={styles.layout}>
                     <div className={styles.content}>
-                        {currentDog && (
-                            <MainDog
-                                dog={currentDog}
-                                isFavorite={isFavorite(currentDog)}
-                                onToggleFavorite={toggleFavorite}
-                                onPreviousDog={handlePreviousDog}
-                                onNextDog={handleNextDog}
-                                isPreviousDogDisabled={isPreviousDogDisabled}
-                                isNextDogDisabled={isNextDogDisabled}
-                            />
-                        )}
-
                         <DogGallery
                             dogs={dogs}
                             selectedDog={currentDog}

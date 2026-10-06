@@ -1,3 +1,4 @@
+import { RotateCcw } from 'lucide-react';
 import type { IBreed } from '../../interfaces/dog';
 import { formatBreed } from '../../utils/formatBreed';
 import styles from './DogFilters.module.css';
@@ -37,7 +38,9 @@ function DogFilters({
     return (
         <section className={styles.filters} aria-label="Dog filters">
             <div className={styles.field}>
-                <label htmlFor="breed-select">Breed</label>
+                <label className={styles.fieldLabel} htmlFor="breed-select">
+                    Breed
+                </label>
 
                 <SearchableSelect
                     id="breed-select"
@@ -56,7 +59,9 @@ function DogFilters({
             </div>
 
             <div className={styles.field}>
-                <label htmlFor="sub-breed-select">Sub-breed</label>
+                <label className={styles.fieldLabel} htmlFor="sub-breed-select">
+                    Sub-breed
+                </label>
 
                 <SearchableSelect
                     id="sub-breed-select"
@@ -73,21 +78,21 @@ function DogFilters({
             </div>
 
             <div className={styles.field}>
-                <label htmlFor="dog-count-select">Dogs</label>
+                <label className={styles.fieldLabel} htmlFor="dog-count-select">
+                    Dogs
+                </label>
 
-                <select
+                <SearchableSelect
                     id="dog-count-select"
-                    value={dogCount}
-                    onChange={(event) =>
-                        onDogCountChange(Number(event.target.value))
-                    }
-                >
-                    {DOG_COUNTS.map((count) => (
-                        <option key={count} value={count}>
-                            {count}
-                        </option>
-                    ))}
-                </select>
+                    label="Dogs"
+                    value={String(dogCount)}
+                    options={DOG_COUNTS.map((count) => ({
+                        value: String(count),
+                        label: `${count} dogs`,
+                    }))}
+                    isSearchable={false}
+                    onChange={(value) => onDogCountChange(Number(value))}
+                />
             </div>
 
             <div className={styles.reset}>
@@ -99,9 +104,7 @@ function DogFilters({
                     aria-label="Reset filters"
                     title="Reset filters"
                 >
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M12 5a7 7 0 1 1-6.32 4H8.1A5 5 0 1 0 12 7c-1.38 0-2.63.56-3.54 1.46L11 11H4V4l3.05 3.05A6.96 6.96 0 0 1 12 5z" />
-                    </svg>
+                    <RotateCcw aria-hidden="true" />
                 </button>
             </div>
         </section>
