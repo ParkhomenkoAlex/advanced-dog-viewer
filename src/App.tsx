@@ -14,6 +14,7 @@ function App() {
     const [selectedBreed, setSelectedBreed] = useState('');
     const [selectedSubBreed, setSelectedSubBreed] = useState('');
     const [dogCount, setDogCount] = useState(10);
+    const [dogsDatasetId, setDogsDatasetId] = useState(0);
 
     const {
         breeds,
@@ -21,11 +22,24 @@ function App() {
         error: breedsError,
     } = useBreeds();
 
-    const { dogs, isLoading, isFetching, error, refreshDogs } = useDogs({
-        count: dogCount,
-        breed: selectedBreed,
-        subBreed: selectedSubBreed,
-    });
+    const {
+        dogs,
+        isLoading,
+        isFetching,
+        error,
+        loadMoreError,
+        isLoadingMore,
+        isLoadMoreDisabled,
+        availableDogsCount,
+        loadMoreDogs,
+    } = useDogs(
+        {
+            count: dogCount,
+            breed: selectedBreed,
+            subBreed: selectedSubBreed,
+        },
+        dogsDatasetId,
+    );
 
     const {
         favorites,
@@ -45,23 +59,26 @@ function App() {
 
     function handleRefreshDogs() {
         setSelectedDog(null);
-        void refreshDogs();
+        setDogsDatasetId((currentDatasetId) => currentDatasetId + 1);
     }
 
     function handleBreedChange(breed: string) {
         setSelectedBreed(breed);
         setSelectedSubBreed('');
         setSelectedDog(null);
+        setDogsDatasetId((currentDatasetId) => currentDatasetId + 1);
     }
 
     function handleSubBreedChange(subBreed: string) {
         setSelectedSubBreed(subBreed);
         setSelectedDog(null);
+        setDogsDatasetId((currentDatasetId) => currentDatasetId + 1);
     }
 
     function handleDogCountChange(count: number) {
         setDogCount(count);
         setSelectedDog(null);
+        setDogsDatasetId((currentDatasetId) => currentDatasetId + 1);
     }
 
     function handleResetFilters() {
@@ -69,6 +86,7 @@ function App() {
         setSelectedSubBreed('');
         setDogCount(10);
         setSelectedDog(null);
+        setDogsDatasetId((currentDatasetId) => currentDatasetId + 1);
     }
 
     function handlePreviousDog() {
@@ -136,6 +154,12 @@ function App() {
                 </p>
             )}
 
+            {loadMoreError && (
+                <p className={styles.error} role="alert">
+                    Failed to load more dogs: {loadMoreError.message}
+                </p>
+            )}
+
             {!isLoading && !error && (
                 <div className={styles.layout}>
                     <div className={styles.content}>
@@ -156,6 +180,24 @@ function App() {
                             selectedDog={currentDog}
                             onSelectDog={setSelectedDog}
                         />
+
+                        <div className={styles.galleryActions}>
+                            <button
+                                className={styles.loadMoreButton}
+                                type="button"
+                                disabled={isLoadingMore || isLoadMoreDisabled}
+                                onClick={() => void loadMoreDogs()}
+                            >
+                                {isLoadingMore ? 'Loading...' : 'Load More'}
+                            </button>
+
+                            {availableDogsCount !== null && (
+                                <p className={styles.galleryStatus}>
+                                    Showing {dogs.length} of{' '}
+                                    {availableDogsCount}
+                                </p>
+                            )}
+                        </div>
                     </div>
 
                     <Favorites
