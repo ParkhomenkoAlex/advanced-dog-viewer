@@ -1,24 +1,24 @@
-export interface Dog {
+export interface IDog {
     imageUrl: string;
     breed: string;
 }
 
-export interface DogsResponse {
+export interface IDogsResponse {
     message: string[];
     status: string;
 }
 
-export interface BreedsResponse {
+export interface IBreedsResponse {
     message: Record<string, string[]>;
     status: string;
 }
 
-export interface Breed {
+export interface IBreed {
     name: string;
     subBreeds: string[];
 }
 
-export interface DogFilters {
+export interface IDogFilters {
     count: number;
     breed: string;
     subBreed: string;

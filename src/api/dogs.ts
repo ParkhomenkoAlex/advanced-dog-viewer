@@ -1,10 +1,10 @@
 import type {
-    Breed,
-    BreedsResponse,
-    Dog,
-    DogFilters,
-    DogsResponse,
-} from '../types/dog';
+    IBreed,
+    IBreedsResponse,
+    IDog,
+    IDogFilters,
+    IDogsResponse,
+} from '../interfaces/dog';
 
 const DOG_API_URL = 'https://dog.ceo/api';
 
@@ -15,21 +15,21 @@ function getBreedFromImageUrl(imageUrl: string): string {
     return breed ?? 'unknown';
 }
 
-function mapImageUrlsToDogs(imageUrls: string[]): Dog[] {
+function mapImageUrlsToDogs(imageUrls: string[]): IDog[] {
     return imageUrls.map((imageUrl) => ({
         imageUrl,
         breed: getBreedFromImageUrl(imageUrl),
     }));
 }
 
-async function fetchDogs(url: string): Promise<Dog[]> {
+async function fetchDogs(url: string): Promise<IDog[]> {
     const response = await fetch(url);
 
     if (!response.ok) {
         throw new Error(`Failed to fetch dogs: ${response.status}`);
     }
 
-    const data: DogsResponse = await response.json();
+    const data: IDogsResponse = await response.json();
 
     if (data.status !== 'success' || !Array.isArray(data.message)) {
         throw new Error('Invalid response from Dog API');
@@ -42,7 +42,7 @@ export async function getDogs({
     count,
     breed,
     subBreed,
-}: DogFilters): Promise<Dog[]> {
+}: IDogFilters): Promise<IDog[]> {
     if (breed && subBreed) {
         return fetchDogs(
             `${DOG_API_URL}/breed/${breed}/${subBreed}/images/random/${count}`,
@@ -58,14 +58,14 @@ export async function getDogs({
     return fetchDogs(`${DOG_API_URL}/breeds/image/random/${count}`);
 }
 
-export async function getBreeds(): Promise<Breed[]> {
+export async function getBreeds(): Promise<IBreed[]> {
     const response = await fetch(`${DOG_API_URL}/breeds/list/all`);
 
     if (!response.ok) {
         throw new Error(`Failed to fetch breeds: ${response.status}`);
     }
 
-    const data: BreedsResponse = await response.json();
+    const data: IBreedsResponse = await response.json();
 
     if (
         data.status !== 'success' ||

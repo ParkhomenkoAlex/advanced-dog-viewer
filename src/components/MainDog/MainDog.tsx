@@ -1,11 +1,11 @@
-import type { Dog } from '../../types/dog';
+import type { IDog } from '../../interfaces/dog';
 import { formatBreed } from '../../utils/formatBreed';
 import styles from './MainDog.module.css';
 
-interface MainDogProps {
-    dog: Dog;
+interface IMainDogProps {
+    dog: IDog;
     isFavorite: boolean;
-    onToggleFavorite: (dog: Dog) => void;
+    onToggleFavorite: (dog: IDog) => void;
     onPreviousDog: () => void;
     onNextDog: () => void;
     isPreviousDogDisabled: boolean;
@@ -20,7 +20,7 @@ function MainDog({
     onNextDog,
     isPreviousDogDisabled,
     isNextDogDisabled,
-}: MainDogProps) {
+}: IMainDogProps) {
     return (
         <section className={styles.mainDog}>
             <img src={dog.imageUrl} alt={formatBreed(dog.breed)} />

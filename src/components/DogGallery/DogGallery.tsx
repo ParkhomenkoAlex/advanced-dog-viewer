@@ -1,14 +1,14 @@
-import type { Dog } from '../../types/dog';
+import type { IDog } from '../../interfaces/dog';
 import { formatBreed } from '../../utils/formatBreed';
 import styles from './DogGallery.module.css';
 
-interface DogGalleryProps {
-    dogs: Dog[];
-    selectedDog: Dog | null;
-    onSelectDog: (dog: Dog) => void;
+interface IDogGalleryProps {
+    dogs: IDog[];
+    selectedDog: IDog | null;
+    onSelectDog: (dog: IDog) => void;
 }
 
-function DogGallery({ dogs, selectedDog, onSelectDog }: DogGalleryProps) {
+function DogGallery({ dogs, selectedDog, onSelectDog }: IDogGalleryProps) {
     return (
         <section className={styles.dogGallery}>
             {dogs.map((dog) => {

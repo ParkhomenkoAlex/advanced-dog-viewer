@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Dog } from '../../types/dog';
+import type { IDog } from '../../interfaces/dog';
 import { formatBreed } from '../../utils/formatBreed';
 import styles from './Favorites.module.css';
 
 type SortOption = 'recently-added' | 'breed-asc' | 'breed-desc';
 
-interface FavoritesProps {
-    favorites: Dog[];
-    currentDog: Dog | null;
-    onSelectDog: (dog: Dog) => void;
-    onRemoveFavorite: (dog: Dog) => void;
+interface IFavoritesProps {
+    favorites: IDog[];
+    currentDog: IDog | null;
+    onSelectDog: (dog: IDog) => void;
+    onRemoveFavorite: (dog: IDog) => void;
     onClearFavorites: () => void;
 }
 
@@ -19,7 +19,7 @@ function Favorites({
     onSelectDog,
     onRemoveFavorite,
     onClearFavorites,
-}: FavoritesProps) {
+}: IFavoritesProps) {
     const [sortOption, setSortOption] = useState<SortOption>('recently-added');
     const [isSortOpen, setIsSortOpen] = useState(false);
     const sortControlRef = useRef<HTMLDivElement>(null);
