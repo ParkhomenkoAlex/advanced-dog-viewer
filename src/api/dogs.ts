@@ -58,6 +58,21 @@ export async function getDogs({
     return fetchDogs(`${DOG_API_URL}/breeds/image/random/${count}`);
 }
 
+export async function getAllDogsForFilter({
+    breed,
+    subBreed,
+}: IDogFilters): Promise<IDog[]> {
+    if (!breed) {
+        throw new Error('A breed is required to fetch all dog images');
+    }
+
+    if (subBreed) {
+        return fetchDogs(`${DOG_API_URL}/breed/${breed}/${subBreed}/images`);
+    }
+
+    return fetchDogs(`${DOG_API_URL}/breed/${breed}/images`);
+}
+
 export async function getBreeds(): Promise<IBreed[]> {
     const response = await fetch(`${DOG_API_URL}/breeds/list/all`);
 
