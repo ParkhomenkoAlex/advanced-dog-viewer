@@ -45,26 +45,28 @@ export function useFavorites() {
         }
     }, [favorites]);
 
-    function addFavorite(dog: Dog) {
-        setFavorites((currentFavorites) => {
-            const isAlreadyFavorite = currentFavorites.some(
-                (favorite) => favorite.imageUrl === dog.imageUrl,
-            );
-
-            if (isAlreadyFavorite) {
-                return currentFavorites;
-            }
-
-            return [...currentFavorites, dog];
-        });
-    }
-
     function removeFavorite(dog: Dog) {
         setFavorites((currentFavorites) =>
             currentFavorites.filter(
                 (favorite) => favorite.imageUrl !== dog.imageUrl,
             ),
         );
+    }
+
+    function toggleFavorite(dog: Dog) {
+        setFavorites((currentFavorites) => {
+            const isAlreadyFavorite = currentFavorites.some(
+                (favorite) => favorite.imageUrl === dog.imageUrl,
+            );
+
+            if (isAlreadyFavorite) {
+                return currentFavorites.filter(
+                    (favorite) => favorite.imageUrl !== dog.imageUrl,
+                );
+            }
+
+            return [...currentFavorites, dog];
+        });
     }
 
     function clearFavorites() {
@@ -81,8 +83,8 @@ export function useFavorites() {
 
     return {
         favorites,
-        addFavorite,
         removeFavorite,
+        toggleFavorite,
         clearFavorites,
         isFavorite,
     };
