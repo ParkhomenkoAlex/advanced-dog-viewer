@@ -6,11 +6,11 @@ import MainDog from './components/MainDog/MainDog';
 import { useBreeds } from './hooks/useBreeds';
 import { useDogs } from './hooks/useDogs';
 import { useFavorites } from './hooks/useFavorites';
-import type { Dog } from './types/dog';
+import type { IDog } from './interfaces/dog';
 import styles from './App.module.css';
 
 function App() {
-    const [selectedDog, setSelectedDog] = useState<Dog | null>(null);
+    const [selectedDog, setSelectedDog] = useState<IDog | null>(null);
     const [selectedBreed, setSelectedBreed] = useState('');
     const [selectedSubBreed, setSelectedSubBreed] = useState('');
     const [dogCount, setDogCount] = useState(10);
@@ -29,13 +29,19 @@ function App() {
 
     const {
         favorites,
-        addFavorite,
         removeFavorite,
+        toggleFavorite,
         clearFavorites,
         isFavorite,
     } = useFavorites();
 
     const currentDog = selectedDog ?? dogs[0] ?? null;
+    const currentDogIndex = currentDog
+        ? dogs.findIndex((dog) => dog.imageUrl === currentDog.imageUrl)
+        : -1;
+    const isPreviousDogDisabled = currentDogIndex <= 0;
+    const isNextDogDisabled =
+        currentDogIndex === -1 || currentDogIndex === dogs.length - 1;
 
     function handleRefreshDogs() {
         setSelectedDog(null);
@@ -63,6 +69,22 @@ function App() {
         setSelectedSubBreed('');
         setDogCount(10);
         setSelectedDog(null);
+    }
+
+    function handlePreviousDog() {
+        if (currentDogIndex <= 0) {
+            return;
+        }
+
+        setSelectedDog(dogs[currentDogIndex - 1]);
+    }
+
+    function handleNextDog() {
+        if (currentDogIndex === -1 || currentDogIndex >= dogs.length - 1) {
+            return;
+        }
+
+        setSelectedDog(dogs[currentDogIndex + 1]);
     }
 
     return (
@@ -121,7 +143,11 @@ function App() {
                             <MainDog
                                 dog={currentDog}
                                 isFavorite={isFavorite(currentDog)}
-                                onAddToFavorites={addFavorite}
+                                onToggleFavorite={toggleFavorite}
+                                onPreviousDog={handlePreviousDog}
+                                onNextDog={handleNextDog}
+                                isPreviousDogDisabled={isPreviousDogDisabled}
+                                isNextDogDisabled={isNextDogDisabled}
                             />
                         )}
 
@@ -134,6 +160,7 @@ function App() {
 
                     <Favorites
                         favorites={favorites}
+                        currentDog={currentDog}
                         onSelectDog={setSelectedDog}
                         onRemoveFavorite={removeFavorite}
                         onClearFavorites={clearFavorites}

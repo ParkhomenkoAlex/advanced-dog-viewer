@@ -14,8 +14,8 @@
     font: inherit;
     cursor: pointer;
     transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+        background-color 0.2s ease,
+        border-color 0.2s ease;
 }
 
 .dogThumbnail img {
@@ -24,11 +24,6 @@
     height: 120px;
     object-fit: cover;
     border-radius: 6px;
-    transition: transform 0.2s ease;
-}
-
-.dogThumbnail:hover img {
-    transform: scale(1.05);
 }
 
 .dogThumbnail span {
@@ -37,9 +32,10 @@
     text-transform: capitalize;
 }
 
-.selected {
-    border-color: #222;
-    box-shadow: 0 0 0 1px #222;
+.dogThumbnail:hover,
+.selectedDog {
+    border-color: #1976d2;
+    background: #e3f2fd;
 }
 
 @media (max-width: 768px) {

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import type { Dog } from '../types/dog';
+import type { IDog } from '../interfaces/dog';
 
 const FAVORITES_STORAGE_KEY = 'advanced-dog-viewer-favorites';
 
-function getStoredFavorites(): Dog[] {
+function getStoredFavorites(): IDog[] {
     try {
         const storedFavorites = localStorage.getItem(FAVORITES_STORAGE_KEY);
 
@@ -18,7 +18,7 @@ function getStoredFavorites(): Dog[] {
         }
 
         return parsedFavorites.filter(
-            (favorite): favorite is Dog =>
+            (favorite): favorite is IDog =>
                 typeof favorite === 'object' &&
                 favorite !== null &&
                 'imageUrl' in favorite &&
@@ -32,7 +32,7 @@ function getStoredFavorites(): Dog[] {
 }
 
 export function useFavorites() {
-    const [favorites, setFavorites] = useState<Dog[]>(getStoredFavorites);
+    const [favorites, setFavorites] = useState<IDog[]>(getStoredFavorites);
 
     useEffect(() => {
         try {
@@ -45,21 +45,7 @@ export function useFavorites() {
         }
     }, [favorites]);
 
-    function addFavorite(dog: Dog) {
-        setFavorites((currentFavorites) => {
-            const isAlreadyFavorite = currentFavorites.some(
-                (favorite) => favorite.imageUrl === dog.imageUrl,
-            );
-
-            if (isAlreadyFavorite) {
-                return currentFavorites;
-            }
-
-            return [...currentFavorites, dog];
-        });
-    }
-
-    function removeFavorite(dog: Dog) {
+    function removeFavorite(dog: IDog) {
         setFavorites((currentFavorites) =>
             currentFavorites.filter(
                 (favorite) => favorite.imageUrl !== dog.imageUrl,
@@ -67,11 +53,27 @@ export function useFavorites() {
         );
     }
 
+    function toggleFavorite(dog: IDog) {
+        setFavorites((currentFavorites) => {
+            const isAlreadyFavorite = currentFavorites.some(
+                (favorite) => favorite.imageUrl === dog.imageUrl,
+            );
+
+            if (isAlreadyFavorite) {
+                return currentFavorites.filter(
+                    (favorite) => favorite.imageUrl !== dog.imageUrl,
+                );
+            }
+
+            return [...currentFavorites, dog];
+        });
+    }
+
     function clearFavorites() {
         setFavorites([]);
     }
 
-    function isFavorite(dog: Dog | null): boolean {
+    function isFavorite(dog: IDog | null): boolean {
         if (!dog) {
             return false;
         }
@@ -81,8 +83,8 @@ export function useFavorites() {
 
     return {
         favorites,
-        addFavorite,
         removeFavorite,
+        toggleFavorite,
         clearFavorites,
         isFavorite,
     };

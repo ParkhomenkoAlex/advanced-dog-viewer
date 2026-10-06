@@ -12,8 +12,8 @@
 
 .info {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 8px;
     margin-top: 12px;
 }
@@ -23,7 +23,13 @@
     text-transform: capitalize;
 }
 
-.favoriteButton {
+.controls {
+    display: flex;
+    gap: 8px;
+}
+
+.favoriteButton,
+.navigationButton {
     width: 40px;
     height: 40px;
     flex-shrink: 0;
@@ -39,24 +45,40 @@
         border-color 0.2s ease;
 }
 
-.favoriteButton svg {
+.favoriteButton svg,
+.navigationButton svg {
     display: block;
     width: 100%;
     height: 100%;
     fill: currentColor;
 }
 
-.favoriteButton:hover {
+.navigationButton svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.favoriteButton:hover,
+.navigationButton:hover:not(:disabled) {
     color: #d89b00;
     background: #fff8d6;
     border-color: #e6b800;
+}
+
+.navigationButton:disabled {
+    color: #aaa;
+    background: #f5f5f5;
+    border-color: #e5e5e5;
+    cursor: not-allowed;
 }
 
 .favoriteButton.favorite {
     color: #d89b00;
     background: #fff3b0;
     border-color: #e6b800;
-    cursor: default;
 }
 
 @media (max-width: 768px) {

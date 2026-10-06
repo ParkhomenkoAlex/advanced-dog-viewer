@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from './SearchableSelect.module.css';
 
-export interface SearchableSelectOption {
+export interface ISearchableSelectOption {
     value: string;
     label: string;
 }
 
-interface SearchableSelectProps {
+interface ISearchableSelectProps {
     id: string;
     label: string;
     value: string;
-    options: SearchableSelectOption[];
+    options: ISearchableSelectOption[];
     allOptionLabel: string;
     disabled?: boolean;
     onChange: (value: string) => void;
@@ -24,7 +24,7 @@ function SearchableSelect({
     allOptionLabel,
     disabled = false,
     onChange,
-}: SearchableSelectProps) {
+}: ISearchableSelectProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const selectRef = useRef<HTMLDivElement>(null);

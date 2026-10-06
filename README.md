@@ -22,7 +22,7 @@ Advanced Dog Viewer is the actively developed extension of the original Dog View
 
 ## Current Project Overview
 
-The application fetches dog images from the Dog CEO API and presents them in a selectable gallery. Users can filter by breed and sub-breed through searchable selectors, choose 10, 20, 30, or 50 dogs, reset filters, and refresh the current result set. Favorites can be added, selected, removed, cleared, and restored from `localStorage` after a reload.
+The application fetches dog images from the Dog CEO API and presents them in a selectable gallery. Users can select dogs from the gallery, navigate through the current result set with previous and next controls, filter by breed and sub-breed through searchable selectors, choose 10, 20, 30, or 50 dogs, reset filters, and refresh the current result set. Favorites can be toggled, selected, removed, reset, sorted by recently added or breed name, and restored from `localStorage` after a reload.
 
 The current implementation uses React, TypeScript, Vite, and TanStack Query. It includes loading and error feedback, accessible labels and focus styles for the current controls, and responsive layouts for the filter panel, gallery, and sidebar.
 
@@ -57,7 +57,7 @@ The current implementation uses React, TypeScript, Vite, and TanStack Query. It 
 
 - Load More
 - Image deduplication
-- Next / Previous navigation
+- ✅ Next / Previous navigation
 - Random Dog
 - Fullscreen / modal image view
 - Share functionality
@@ -67,7 +67,9 @@ The current implementation uses React, TypeScript, Vite, and TanStack Query. It 
 - ✅ Favorites functionality
 - ✅ Favorites persistence with `localStorage`
 - ✅ Favorites counter
-- ✅ Clear all favorites
+- ✅ Reset favorites
+- ✅ Favorite toggle
+- ✅ Favorites sorting
 
 ### 6. Routing & Shareable URL State
 
