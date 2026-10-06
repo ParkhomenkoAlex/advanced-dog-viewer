@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Heart, RefreshCw } from 'lucide-react';
 import DogFilters from './components/DogFilters/DogFilters';
 import DogGallery from './components/DogGallery/DogGallery';
 import Favorites from './components/Favorites/Favorites';
+import FavoritesDrawer from './components/FavoritesDrawer/FavoritesDrawer';
 import MainDog from './components/MainDog/MainDog';
 import { useBreeds } from './hooks/useBreeds';
 import { useDogs } from './hooks/useDogs';
@@ -16,6 +17,8 @@ function App() {
     const [selectedSubBreed, setSelectedSubBreed] = useState('');
     const [dogCount, setDogCount] = useState(10);
     const [dogsDatasetId, setDogsDatasetId] = useState(0);
+    const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
+    const favoritesTriggerRef = useRef<HTMLButtonElement>(null);
 
     const {
         breeds,
@@ -62,6 +65,10 @@ function App() {
         setSelectedDog(null);
         setDogsDatasetId((currentDatasetId) => currentDatasetId + 1);
     }
+
+    const handleCloseFavorites = useCallback(() => {
+        setIsFavoritesOpen(false);
+    }, []);
 
     function handleBreedChange(breed: string) {
         setSelectedBreed(breed);
@@ -129,15 +136,20 @@ function App() {
                         />
                     </button>
 
-                    <a
+                    <button
+                        ref={favoritesTriggerRef}
                         className={styles.favoritesTrigger}
-                        href="#favorites"
+                        type="button"
                         aria-label={`View favorites (${favorites.length})`}
+                        aria-haspopup="dialog"
+                        aria-expanded={isFavoritesOpen}
+                        aria-controls="favorites-drawer"
+                        onClick={() => setIsFavoritesOpen(true)}
                     >
                         <Heart aria-hidden="true" />
                         <span>Favorites</span>
                         <strong>{favorites.length}</strong>
-                    </a>
+                    </button>
                 </div>
             </header>
 
@@ -214,18 +226,22 @@ function App() {
                             )}
                         </div>
                     </div>
-
-                    <div className={styles.favoritesAnchor} id="favorites">
-                        <Favorites
-                            favorites={favorites}
-                            currentDog={currentDog}
-                            onSelectDog={setSelectedDog}
-                            onRemoveFavorite={removeFavorite}
-                            onClearFavorites={clearFavorites}
-                        />
-                    </div>
                 </div>
             )}
+
+            <FavoritesDrawer
+                isOpen={isFavoritesOpen}
+                triggerRef={favoritesTriggerRef}
+                onClose={handleCloseFavorites}
+            >
+                <Favorites
+                    favorites={favorites}
+                    currentDog={currentDog}
+                    onSelectDog={setSelectedDog}
+                    onRemoveFavorite={removeFavorite}
+                    onClearFavorites={clearFavorites}
+                />
+            </FavoritesDrawer>
         </main>
     );
 }

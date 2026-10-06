@@ -76,9 +76,10 @@
     border-radius: var(--radius-control);
     background: rgb(215 174 99 / 8%);
     color: var(--text-primary);
+    font: inherit;
     font-size: 14px;
     font-weight: 600;
-    text-decoration: none;
+    cursor: pointer;
     transition:
         color 180ms ease,
         border-color 180ms ease,
@@ -132,19 +133,11 @@
 }
 
 .layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
-    gap: 32px;
-    align-items: start;
-}
-
-.content,
-.favoritesAnchor {
     min-width: 0;
 }
 
-.favoritesAnchor {
-    scroll-margin-top: 20px;
+.content {
+    min-width: 0;
 }
 
 .galleryActions {
@@ -209,11 +202,6 @@
     .app {
         padding-inline: 24px;
     }
-
-    .layout {
-        grid-template-columns: minmax(0, 1fr) 280px;
-        gap: 24px;
-    }
 }
 
 @media (max-width: 768px) {
@@ -257,9 +245,5 @@
 
     .filtersRegion {
         margin-bottom: 24px;
-    }
-
-    .layout {
-        grid-template-columns: 1fr;
     }
 }
