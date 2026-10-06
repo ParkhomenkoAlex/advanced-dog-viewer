@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Heart, RefreshCw } from 'lucide-react';
 import DogFilters from './components/DogFilters/DogFilters';
 import DogGallery from './components/DogGallery/DogGallery';
 import Favorites from './components/Favorites/Favorites';
@@ -107,38 +108,52 @@ function App() {
 
     return (
         <main className={styles.app}>
-            <div className={styles.header}>
-                <h1>Advanced Dog Viewer</h1>
+            <header className={styles.header}>
+                <h1 className={styles.wordmark}>
+                    <span>Advanced</span>
+                    <span>Dog Viewer</span>
+                </h1>
 
-                <button
-                    className={styles.refreshButton}
-                    type="button"
-                    aria-label="Refresh dogs"
-                    title="Refresh dogs"
-                    onClick={handleRefreshDogs}
-                    disabled={isFetching}
-                >
-                    <svg
-                        className={isFetching ? styles.spinning : ''}
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
+                <div className={styles.headerActions}>
+                    <button
+                        className={styles.refreshButton}
+                        type="button"
+                        aria-label="Refresh dogs"
+                        title="Refresh dogs"
+                        onClick={handleRefreshDogs}
+                        disabled={isFetching}
                     >
-                        <path d="M17.65 6.35A7.95 7.95 0 0 0 12 4a8 8 0 1 0 7.75 10h-2.1A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
-                    </svg>
-                </button>
-            </div>
+                        <RefreshCw
+                            className={isFetching ? styles.spinning : ''}
+                            aria-hidden="true"
+                        />
+                    </button>
 
-            <DogFilters
-                breeds={breeds}
-                selectedBreed={selectedBreed}
-                selectedSubBreed={selectedSubBreed}
-                dogCount={dogCount}
-                isLoadingBreeds={isLoadingBreeds}
-                onBreedChange={handleBreedChange}
-                onSubBreedChange={handleSubBreedChange}
-                onDogCountChange={handleDogCountChange}
-                onResetFilters={handleResetFilters}
-            />
+                    <a
+                        className={styles.favoritesTrigger}
+                        href="#favorites"
+                        aria-label={`View favorites (${favorites.length})`}
+                    >
+                        <Heart aria-hidden="true" />
+                        <span>Favorites</span>
+                        <strong>{favorites.length}</strong>
+                    </a>
+                </div>
+            </header>
+
+            <div className={styles.filtersRegion}>
+                <DogFilters
+                    breeds={breeds}
+                    selectedBreed={selectedBreed}
+                    selectedSubBreed={selectedSubBreed}
+                    dogCount={dogCount}
+                    isLoadingBreeds={isLoadingBreeds}
+                    onBreedChange={handleBreedChange}
+                    onSubBreedChange={handleSubBreedChange}
+                    onDogCountChange={handleDogCountChange}
+                    onResetFilters={handleResetFilters}
+                />
+            </div>
 
             {breedsError && (
                 <p className={styles.error} role="alert">
@@ -200,13 +215,15 @@ function App() {
                         </div>
                     </div>
 
-                    <Favorites
-                        favorites={favorites}
-                        currentDog={currentDog}
-                        onSelectDog={setSelectedDog}
-                        onRemoveFavorite={removeFavorite}
-                        onClearFavorites={clearFavorites}
-                    />
+                    <div className={styles.favoritesAnchor} id="favorites">
+                        <Favorites
+                            favorites={favorites}
+                            currentDog={currentDog}
+                            onSelectDog={setSelectedDog}
+                            onRemoveFavorite={removeFavorite}
+                            onClearFavorites={clearFavorites}
+                        />
+                    </div>
                 </div>
             )}
         </main>
