@@ -6,11 +6,11 @@ import MainDog from './components/MainDog/MainDog';
 import { useBreeds } from './hooks/useBreeds';
 import { useDogs } from './hooks/useDogs';
 import { useFavorites } from './hooks/useFavorites';
-import type { Dog } from './types/dog';
+import type { IDog } from './interfaces/dog';
 import styles from './App.module.css';
 
 function App() {
-    const [selectedDog, setSelectedDog] = useState<Dog | null>(null);
+    const [selectedDog, setSelectedDog] = useState<IDog | null>(null);
     const [selectedBreed, setSelectedBreed] = useState('');
     const [selectedSubBreed, setSelectedSubBreed] = useState('');
     const [dogCount, setDogCount] = useState(10);

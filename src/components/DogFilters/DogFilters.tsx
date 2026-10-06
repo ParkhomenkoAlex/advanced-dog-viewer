@@ -1,10 +1,10 @@
-import type { Breed } from '../../types/dog';
+import type { IBreed } from '../../interfaces/dog';
 import { formatBreed } from '../../utils/formatBreed';
 import styles from './DogFilters.module.css';
 import SearchableSelect from './SearchableSelect';
 
-interface DogFiltersProps {
-    breeds: Breed[];
+interface IDogFiltersProps {
+    breeds: IBreed[];
     selectedBreed: string;
     selectedSubBreed: string;
     dogCount: number;
@@ -27,7 +27,7 @@ function DogFilters({
     onSubBreedChange,
     onDogCountChange,
     onResetFilters,
-}: DogFiltersProps) {
+}: IDogFiltersProps) {
     const currentBreed = breeds.find((breed) => breed.name === selectedBreed);
     const subBreeds = currentBreed?.subBreeds ?? [];
 

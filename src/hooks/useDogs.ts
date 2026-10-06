@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { getDogs } from '../api/dogs';
-import type { DogFilters } from '../types/dog';
+import type { IDogFilters } from '../interfaces/dog';
 
-export function useDogs(filters: DogFilters) {
+export function useDogs(filters: IDogFilters) {
     const dogsQuery = useQuery({
         queryKey: ['dogs', filters],
         queryFn: () => getDogs(filters),
