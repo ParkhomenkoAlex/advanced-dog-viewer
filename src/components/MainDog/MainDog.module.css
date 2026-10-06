@@ -2,87 +2,213 @@
     margin-bottom: 32px;
 }
 
-.mainDog img {
+.imageFrame {
+    position: relative;
+    isolation: isolate;
+    height: clamp(390px, 54vw, 620px);
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+    border-radius: 24px;
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-ambient);
+}
+
+.image {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
-    height: 400px;
+    height: 100%;
     object-fit: cover;
-    border-radius: 12px;
+    will-change: opacity, transform;
 }
 
-.info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    margin-top: 12px;
+.scrim {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    background:
+        linear-gradient(
+            90deg,
+            rgb(0 0 0 / 68%) 0%,
+            rgb(0 0 0 / 30%) 48%,
+            transparent 78%
+        ),
+        linear-gradient(0deg, rgb(0 0 0 / 42%) 0%, transparent 48%);
+    pointer-events: none;
 }
 
-.mainDog h2 {
+.content {
+    position: absolute;
+    z-index: 2;
+    bottom: clamp(24px, 4vw, 52px);
+    left: clamp(24px, 5vw, 64px);
+    max-width: min(660px, calc(100% - 48px));
+}
+
+.eyebrow {
+    margin: 0 0 12px;
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.content h2 {
+    max-width: 11ch;
     margin: 0;
-    text-transform: capitalize;
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: clamp(42px, 5.3vw, 78px);
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    line-height: 0.94;
+    text-wrap: balance;
 }
 
 .controls {
     display: flex;
-    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
 }
 
 .favoriteButton,
 .navigationButton {
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    background: #fff;
-    color: #555;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgb(255 255 255 / 22%);
+    color: var(--text-primary);
     cursor: pointer;
     transition:
-        color 0.2s ease,
-        background-color 0.2s ease,
-        border-color 0.2s ease;
+        color 180ms ease,
+        border-color 180ms ease,
+        background-color 180ms ease,
+        transform 180ms ease;
 }
 
-.favoriteButton svg,
-.navigationButton svg {
-    display: block;
-    width: 100%;
-    height: 100%;
+.favoriteButton {
+    min-height: 48px;
+    gap: 10px;
+    padding: 0 19px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #17130d;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.favoriteButton svg {
+    width: 18px;
+    height: 18px;
     fill: currentColor;
+    stroke-width: 1.8;
+}
+
+.navigationControls {
+    display: flex;
+    gap: 10px;
+}
+
+.navigationButton {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-radius: 50%;
+    background: rgb(13 15 18 / 50%);
+    backdrop-filter: blur(8px);
 }
 
 .navigationButton svg {
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+    width: 21px;
+    height: 21px;
+    stroke-width: 1.75;
 }
 
 .favoriteButton:hover,
+.favoriteButton.favorite {
+    border-color: var(--accent-hover);
+    background: var(--accent-hover);
+    color: #17130d;
+    transform: translateY(-1px);
+}
+
 .navigationButton:hover:not(:disabled) {
-    color: #d89b00;
-    background: #fff8d6;
-    border-color: #e6b800;
+    border-color: var(--accent);
+    background: rgb(13 15 18 / 76%);
+    color: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+.favoriteButton:focus-visible,
+.navigationButton:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
 }
 
 .navigationButton:disabled {
-    color: #aaa;
-    background: #f5f5f5;
-    border-color: #e5e5e5;
+    border-color: rgb(255 255 255 / 8%);
+    background: rgb(13 15 18 / 30%);
+    color: rgb(244 241 235 / 32%);
     cursor: not-allowed;
 }
 
 .favoriteButton.favorite {
-    color: #d89b00;
-    background: #fff3b0;
-    border-color: #e6b800;
+    box-shadow: 0 0 0 1px rgb(23 19 13 / 16%) inset;
 }
 
 @media (max-width: 768px) {
-    .mainDog img {
-        height: 280px;
+    .mainDog {
+        margin-bottom: 24px;
+    }
+
+    .imageFrame {
+        height: min(118vw, 540px);
+        min-height: 390px;
+        border-radius: 20px;
+    }
+
+    .scrim {
+        background:
+            linear-gradient(90deg, rgb(0 0 0 / 57%) 0%, rgb(0 0 0 / 10%) 88%),
+            linear-gradient(0deg, rgb(0 0 0 / 64%) 0%, transparent 58%);
+    }
+
+    .content {
+        right: 24px;
+        bottom: 24px;
+        left: 24px;
+        max-width: none;
+    }
+
+    .eyebrow {
+        margin-bottom: 8px;
+    }
+
+    .content h2 {
+        font-size: clamp(38px, 11vw, 54px);
+    }
+
+    .controls {
+        gap: 10px;
+        margin-top: 22px;
+    }
+
+    .favoriteButton {
+        min-height: 46px;
+        padding-inline: 16px;
+    }
+
+    .navigationControls {
+        gap: 8px;
+    }
+
+    .navigationButton {
+        width: 46px;
+        height: 46px;
     }
 }
