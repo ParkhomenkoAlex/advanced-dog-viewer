@@ -17,10 +17,11 @@ function DogGallery({ dogs, selectedDog, onSelectDog }: DogGalleryProps) {
                 return (
                     <button
                         className={`${styles.dogThumbnail} ${
-                            isSelected ? styles.selected : ''
+                            isSelected ? styles.selectedDog : ''
                         }`}
                         key={dog.imageUrl}
                         type="button"
+                        aria-pressed={isSelected}
                         onClick={() => onSelectDog(dog)}
                     >
                         <img src={dog.imageUrl} alt={formatBreed(dog.breed)} />

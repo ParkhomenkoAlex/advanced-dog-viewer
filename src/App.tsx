@@ -160,6 +160,7 @@ function App() {
 
                     <Favorites
                         favorites={favorites}
+                        currentDog={currentDog}
                         onSelectDog={setSelectedDog}
                         onRemoveFavorite={removeFavorite}
                         onClearFavorites={clearFavorites}
