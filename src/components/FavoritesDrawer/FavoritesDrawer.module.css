@@ -1,0 +1,141 @@
+.layer {
+    position: fixed;
+    z-index: 20;
+    inset: 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: rgb(0 0 0 / 58%);
+    cursor: default;
+}
+
+.drawer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: min(440px, 92vw);
+    height: 100%;
+    flex-direction: column;
+    border-left: 1px solid var(--border-subtle);
+    background: var(--surface);
+    box-shadow: -24px 0 64px rgb(0 0 0 / 32%);
+}
+
+.drawerHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 28px 28px 20px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.eyebrow {
+    margin: 0 0 4px;
+    color: var(--text-subdued);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.drawerHeader h2 {
+    margin: 0;
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.closeButton {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    padding: 0;
+    border: 1px solid var(--border-subtle);
+    border-radius: 50%;
+    background: rgb(13 15 18 / 72%);
+    color: var(--text-primary);
+    cursor: pointer;
+    place-items: center;
+    transition:
+        color 180ms ease,
+        border-color 180ms ease,
+        background-color 180ms ease;
+}
+
+.closeButton svg {
+    width: 19px;
+    height: 19px;
+    stroke-width: 1.75;
+}
+
+.closeButton:hover {
+    border-color: rgb(215 174 99 / 55%);
+    background: rgb(215 174 99 / 10%);
+    color: var(--accent-hover);
+}
+
+.closeButton:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.drawerContent {
+    min-height: 0;
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 20px 28px 28px;
+}
+
+@media (max-width: 768px) {
+    .layer {
+        align-items: flex-end;
+    }
+
+    .drawer {
+        width: 100%;
+        height: min(82dvh, 720px);
+        border-top: 1px solid var(--border-subtle);
+        border-left: 0;
+        border-radius: 24px 24px 0 0;
+    }
+
+    .drawer::before {
+        width: 40px;
+        height: 4px;
+        margin: 10px auto -4px;
+        border-radius: 999px;
+        background: rgb(255 255 255 / 25%);
+        content: '';
+    }
+
+    .drawerHeader {
+        padding: 22px 20px 16px;
+    }
+
+    .drawerContent {
+        padding: 16px 20px 24px;
+    }
+}
+
+@media (max-height: 620px) and (max-width: 768px) {
+    .drawer {
+        height: 100%;
+        border-radius: 0;
+    }
+
+    .drawer::before {
+        display: none;
+    }
+}

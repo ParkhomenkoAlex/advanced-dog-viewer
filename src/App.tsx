@@ -1,7 +1,15 @@
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import {
+    AlertCircle,
+    Heart,
+    ImageOff,
+    LoaderCircle,
+    RefreshCw,
+} from 'lucide-react';
 import DogFilters from './components/DogFilters/DogFilters';
 import DogGallery from './components/DogGallery/DogGallery';
 import Favorites from './components/Favorites/Favorites';
+import FavoritesDrawer from './components/FavoritesDrawer/FavoritesDrawer';
 import MainDog from './components/MainDog/MainDog';
 import { useBreeds } from './hooks/useBreeds';
 import { useDogs } from './hooks/useDogs';
@@ -15,6 +23,8 @@ function App() {
     const [selectedSubBreed, setSelectedSubBreed] = useState('');
     const [dogCount, setDogCount] = useState(10);
     const [dogsDatasetId, setDogsDatasetId] = useState(0);
+    const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
+    const favoritesTriggerRef = useRef<HTMLButtonElement>(null);
 
     const {
         breeds,
@@ -56,11 +66,16 @@ function App() {
     const isPreviousDogDisabled = currentDogIndex <= 0;
     const isNextDogDisabled =
         currentDogIndex === -1 || currentDogIndex === dogs.length - 1;
+    const hasHero = !isLoading && !error && currentDog !== null;
 
     function handleRefreshDogs() {
         setSelectedDog(null);
         setDogsDatasetId((currentDatasetId) => currentDatasetId + 1);
     }
+
+    const handleCloseFavorites = useCallback(() => {
+        setIsFavoritesOpen(false);
+    }, []);
 
     function handleBreedChange(breed: string) {
         setSelectedBreed(breed);
@@ -107,55 +122,112 @@ function App() {
 
     return (
         <main className={styles.app}>
-            <div className={styles.header}>
-                <h1>Advanced Dog Viewer</h1>
+            <div
+                className={`${styles.heroComposition} ${
+                    hasHero ? styles.hasHero : ''
+                }`}
+            >
+                <header className={styles.header}>
+                    <h1 className={styles.wordmark}>
+                        <span>Advanced</span>
+                        <span>Dog Viewer</span>
+                    </h1>
 
-                <button
-                    className={styles.refreshButton}
-                    type="button"
-                    aria-label="Refresh dogs"
-                    title="Refresh dogs"
-                    onClick={handleRefreshDogs}
-                    disabled={isFetching}
-                >
-                    <svg
-                        className={isFetching ? styles.spinning : ''}
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                    >
-                        <path d="M17.65 6.35A7.95 7.95 0 0 0 12 4a8 8 0 1 0 7.75 10h-2.1A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
-                    </svg>
-                </button>
+                    <div className={styles.headerFilters}>
+                        <DogFilters
+                            breeds={breeds}
+                            selectedBreed={selectedBreed}
+                            selectedSubBreed={selectedSubBreed}
+                            dogCount={dogCount}
+                            isLoadingBreeds={isLoadingBreeds}
+                            onBreedChange={handleBreedChange}
+                            onSubBreedChange={handleSubBreedChange}
+                            onDogCountChange={handleDogCountChange}
+                            onResetFilters={handleResetFilters}
+                        />
+                    </div>
+
+                    <div className={styles.headerActions}>
+                        <button
+                            className={styles.refreshButton}
+                            type="button"
+                            aria-label="Refresh dogs"
+                            title="Refresh dogs"
+                            onClick={handleRefreshDogs}
+                            disabled={isFetching}
+                        >
+                            <RefreshCw
+                                className={isFetching ? styles.spinning : ''}
+                                aria-hidden="true"
+                            />
+                        </button>
+
+                        <button
+                            ref={favoritesTriggerRef}
+                            className={styles.favoritesTrigger}
+                            type="button"
+                            aria-label={`View favorites (${favorites.length})`}
+                            aria-haspopup="dialog"
+                            aria-expanded={isFavoritesOpen}
+                            aria-controls="favorites-drawer"
+                            onClick={() => setIsFavoritesOpen(true)}
+                        >
+                            <Heart aria-hidden="true" />
+                            <span>Favorites</span>
+                            <strong>{favorites.length}</strong>
+                        </button>
+                    </div>
+                </header>
+
+                {hasHero && (
+                    <MainDog
+                        dog={currentDog}
+                        isFavorite={isFavorite(currentDog)}
+                        onToggleFavorite={toggleFavorite}
+                        onPreviousDog={handlePreviousDog}
+                        onNextDog={handleNextDog}
+                        isPreviousDogDisabled={isPreviousDogDisabled}
+                        isNextDogDisabled={isNextDogDisabled}
+                    />
+                )}
             </div>
 
-            <DogFilters
-                breeds={breeds}
-                selectedBreed={selectedBreed}
-                selectedSubBreed={selectedSubBreed}
-                dogCount={dogCount}
-                isLoadingBreeds={isLoadingBreeds}
-                onBreedChange={handleBreedChange}
-                onSubBreedChange={handleSubBreedChange}
-                onDogCountChange={handleDogCountChange}
-                onResetFilters={handleResetFilters}
-            />
-
             {breedsError && (
-                <p className={styles.error} role="alert">
+                <p className={styles.statusMessage} role="alert">
+                    <AlertCircle aria-hidden="true" />
                     Failed to load breeds: {breedsError.message}
                 </p>
             )}
 
-            {isLoading && <p aria-live="polite">Loading dogs...</p>}
+            {isLoading && (
+                <section className={styles.statePanel} aria-live="polite">
+                    <LoaderCircle
+                        className={styles.stateSpinner}
+                        aria-hidden="true"
+                    />
+                    <h2>Loading dogs</h2>
+                    <p>Preparing your gallery.</p>
+                </section>
+            )}
 
             {error && (
-                <p className={styles.error} role="alert">
-                    Failed to load dogs: {error.message}
-                </p>
+                <section className={styles.statePanel} role="alert">
+                    <AlertCircle aria-hidden="true" />
+                    <h2>Unable to load dogs</h2>
+                    <p>{error.message}</p>
+                    <button
+                        className={styles.stateAction}
+                        type="button"
+                        onClick={handleRefreshDogs}
+                    >
+                        Try again
+                    </button>
+                </section>
             )}
 
             {loadMoreError && (
-                <p className={styles.error} role="alert">
+                <p className={styles.statusMessage} role="alert">
+                    <AlertCircle aria-hidden="true" />
                     Failed to load more dogs: {loadMoreError.message}
                 </p>
             )}
@@ -163,52 +235,74 @@ function App() {
             {!isLoading && !error && (
                 <div className={styles.layout}>
                     <div className={styles.content}>
-                        {currentDog && (
-                            <MainDog
-                                dog={currentDog}
-                                isFavorite={isFavorite(currentDog)}
-                                onToggleFavorite={toggleFavorite}
-                                onPreviousDog={handlePreviousDog}
-                                onNextDog={handleNextDog}
-                                isPreviousDogDisabled={isPreviousDogDisabled}
-                                isNextDogDisabled={isNextDogDisabled}
-                            />
+                        {dogs.length === 0 ? (
+                            <section className={styles.emptyGallery}>
+                                <ImageOff aria-hidden="true" />
+                                <h2>No dogs found</h2>
+                                <p>Try refreshing or adjusting the filters.</p>
+                                <button
+                                    className={styles.stateAction}
+                                    type="button"
+                                    onClick={handleRefreshDogs}
+                                >
+                                    Refresh dogs
+                                </button>
+                            </section>
+                        ) : (
+                            <>
+                                <DogGallery
+                                    dogs={dogs}
+                                    selectedDog={currentDog}
+                                    onSelectDog={setSelectedDog}
+                                />
+
+                                <div className={styles.galleryActions}>
+                                    <button
+                                        className={styles.loadMoreButton}
+                                        type="button"
+                                        aria-busy={isLoadingMore}
+                                        disabled={
+                                            isLoadingMore || isLoadMoreDisabled
+                                        }
+                                        onClick={() => void loadMoreDogs()}
+                                    >
+                                        {isLoadingMore && (
+                                            <LoaderCircle
+                                                className={styles.buttonSpinner}
+                                                aria-hidden="true"
+                                            />
+                                        )}
+                                        {isLoadingMore
+                                            ? 'Loading...'
+                                            : 'Load More'}
+                                    </button>
+
+                                    {availableDogsCount !== null && (
+                                        <p className={styles.galleryStatus}>
+                                            Showing {dogs.length} of{' '}
+                                            {availableDogsCount}
+                                        </p>
+                                    )}
+                                </div>
+                            </>
                         )}
-
-                        <DogGallery
-                            dogs={dogs}
-                            selectedDog={currentDog}
-                            onSelectDog={setSelectedDog}
-                        />
-
-                        <div className={styles.galleryActions}>
-                            <button
-                                className={styles.loadMoreButton}
-                                type="button"
-                                disabled={isLoadingMore || isLoadMoreDisabled}
-                                onClick={() => void loadMoreDogs()}
-                            >
-                                {isLoadingMore ? 'Loading...' : 'Load More'}
-                            </button>
-
-                            {availableDogsCount !== null && (
-                                <p className={styles.galleryStatus}>
-                                    Showing {dogs.length} of{' '}
-                                    {availableDogsCount}
-                                </p>
-                            )}
-                        </div>
                     </div>
-
-                    <Favorites
-                        favorites={favorites}
-                        currentDog={currentDog}
-                        onSelectDog={setSelectedDog}
-                        onRemoveFavorite={removeFavorite}
-                        onClearFavorites={clearFavorites}
-                    />
                 </div>
             )}
+
+            <FavoritesDrawer
+                isOpen={isFavoritesOpen}
+                triggerRef={favoritesTriggerRef}
+                onClose={handleCloseFavorites}
+            >
+                <Favorites
+                    favorites={favorites}
+                    currentDog={currentDog}
+                    onSelectDog={setSelectedDog}
+                    onRemoveFavorite={removeFavorite}
+                    onClearFavorites={clearFavorites}
+                />
+            </FavoritesDrawer>
         </main>
     );
 }

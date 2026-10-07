@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { ArrowDownUp, Heart, RotateCcw, Trash2 } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 import type { IDog } from '../../interfaces/dog';
 import { formatBreed } from '../../utils/formatBreed';
 import styles from './Favorites.module.css';
@@ -77,10 +79,10 @@ function Favorites({
     return (
         <aside className={styles.favorites}>
             <div className={styles.header}>
-                <h2>
-                    Favorites
-                    <span className={styles.count}>{favorites.length}</span>
-                </h2>
+                <p className={styles.count}>
+                    {favorites.length}{' '}
+                    {favorites.length === 1 ? 'dog saved' : 'dogs saved'}
+                </p>
 
                 <div className={styles.toolbarActions}>
                     <div className={styles.sortControl} ref={sortControlRef}>
@@ -94,9 +96,7 @@ function Favorites({
                             disabled={favorites.length === 0}
                             onClick={() => setIsSortOpen((isOpen) => !isOpen)}
                         >
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M4 7h10M4 12h7M4 17h4M17 5v14m0 0-3-3m3 3 3-3" />
-                            </svg>
+                            <ArrowDownUp aria-hidden="true" />
                         </button>
 
                         {isSortOpen && (
@@ -157,59 +157,66 @@ function Favorites({
                     <button
                         className={styles.toolbarButton}
                         type="button"
-                        aria-label="Reset favorites"
-                        title="Reset favorites"
+                        aria-label="Clear favorites"
+                        title="Clear favorites"
                         onClick={onClearFavorites}
                         disabled={favorites.length === 0}
                     >
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M12 5a7 7 0 1 1-6.32 4H8.1A5 5 0 1 0 12 7c-1.38 0-2.63.56-3.54 1.46L11 11H4V4l3.05 3.05A6.96 6.96 0 0 1 12 5z" />
-                        </svg>
+                        <RotateCcw aria-hidden="true" />
                     </button>
                 </div>
             </div>
 
             {favorites.length === 0 ? (
                 <div className={styles.emptyState}>
+                    <Heart aria-hidden="true" />
                     <p>No favorites yet.</p>
                     <span>Choose a dog and save it here.</span>
                 </div>
             ) : (
                 <ul className={styles.list}>
-                    {sortedFavorites.map((dog) => (
-                        <li className={styles.item} key={dog.imageUrl}>
-                            <button
-                                className={`${styles.dog} ${
-                                    dog.imageUrl === currentDog?.imageUrl
-                                        ? styles.selectedDog
-                                        : ''
-                                }`}
-                                type="button"
-                                aria-pressed={
-                                    dog.imageUrl === currentDog?.imageUrl
-                                }
-                                onClick={() => onSelectDog(dog)}
+                    <AnimatePresence initial={false}>
+                        {sortedFavorites.map((dog) => (
+                            <motion.li
+                                className={styles.item}
+                                key={dog.imageUrl}
+                                layout
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.96 }}
+                                transition={{ duration: 0.18, ease: 'easeOut' }}
                             >
-                                <img
-                                    src={dog.imageUrl}
-                                    alt={formatBreed(dog.breed)}
-                                />
-                                <span>{formatBreed(dog.breed)}</span>
-                            </button>
+                                <button
+                                    className={`${styles.dog} ${
+                                        dog.imageUrl === currentDog?.imageUrl
+                                            ? styles.selectedDog
+                                            : ''
+                                    }`}
+                                    type="button"
+                                    aria-pressed={
+                                        dog.imageUrl === currentDog?.imageUrl
+                                    }
+                                    onClick={() => onSelectDog(dog)}
+                                >
+                                    <img
+                                        src={dog.imageUrl}
+                                        alt={formatBreed(dog.breed)}
+                                    />
+                                    <span>{formatBreed(dog.breed)}</span>
+                                </button>
 
-                            <button
-                                className={styles.removeButton}
-                                type="button"
-                                aria-label={`Remove ${formatBreed(dog.breed)} from favorites`}
-                                title="Remove from favorites"
-                                onClick={() => onRemoveFavorite(dog)}
-                            >
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M9 3h6l1 2h4v2H4V5h4l1-2zm-3 6h12l-1 12H7L6 9zm3 2v7h2v-7H9zm4 0v7h2v-7h-2z" />
-                                </svg>
-                            </button>
-                        </li>
-                    ))}
+                                <button
+                                    className={styles.removeButton}
+                                    type="button"
+                                    aria-label={`Remove ${formatBreed(dog.breed)} from favorites`}
+                                    title="Remove from favorites"
+                                    onClick={() => onRemoveFavorite(dog)}
+                                >
+                                    <Trash2 aria-hidden="true" />
+                                </button>
+                            </motion.li>
+                        ))}
+                    </AnimatePresence>
                 </ul>
             )}
         </aside>

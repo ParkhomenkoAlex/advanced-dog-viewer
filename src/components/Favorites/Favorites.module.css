@@ -1,37 +1,19 @@
 .favorites {
-    min-width: 280px;
-    padding: 16px;
-    border: 1px solid #e5e5e5;
-    border-radius: 12px;
-    background: #fff;
+    min-width: 0;
 }
 
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 16px;
     margin-bottom: 16px;
 }
 
-.header h2 {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0;
-}
-
 .count {
-    display: inline-flex;
-    min-width: 24px;
-    height: 24px;
-    align-items: center;
-    justify-content: center;
-    padding: 0 7px;
-    border-radius: 999px;
-    background: #e3f2fd;
-    color: #1976d2;
-    font-size: 14px;
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 13px;
 }
 
 .toolbarActions {
@@ -46,118 +28,129 @@
 
 .toolbarButton {
     display: grid;
-    width: 42px;
-    height: 42px;
-    padding: 9px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: #fff;
-    color: #555;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 1px solid rgb(255 255 255 / 10%);
+    border-radius: 10px;
+    background: rgb(13 15 18 / 52%);
+    color: var(--text-muted);
     cursor: pointer;
     place-items: center;
     transition:
-        color 0.2s ease,
-        background-color 0.2s ease,
-        border-color 0.2s ease;
+        color 180ms ease,
+        border-color 180ms ease,
+        background-color 180ms ease;
 }
 
 .toolbarButton svg {
-    display: block;
-    width: 100%;
-    height: 100%;
-    fill: currentColor;
+    width: 17px;
+    height: 17px;
+    stroke-width: 1.75;
 }
 
-.sortButton svg {
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.toolbarButton:hover:not(:disabled) {
-    color: #1976d2;
-    background: #e3f2fd;
-    border-color: #1976d2;
+.toolbarButton:hover:not(:disabled),
+.sortButton[aria-expanded='true'] {
+    border-color: rgb(215 174 99 / 52%);
+    background: rgb(215 174 99 / 9%);
+    color: var(--accent-hover);
 }
 
 .toolbarButton:focus-visible {
     outline: none;
-    border-color: #1976d2;
-    box-shadow: 0 0 0 3px rgb(25 118 210 / 12%);
+    box-shadow: var(--focus-ring);
 }
 
 .toolbarButton:disabled {
-    background: #f5f5f5;
-    color: #aaa;
+    color: var(--text-subdued);
     cursor: not-allowed;
+    opacity: 0.5;
 }
 
 .sortPopup {
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     top: calc(100% + 8px);
     right: 0;
     display: grid;
-    min-width: 168px;
-    padding: 4px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 8px 20px rgb(0 0 0 / 12%);
+    min-width: 184px;
+    padding: 6px;
+    border: 1px solid rgb(255 255 255 / 12%);
+    border-radius: 12px;
+    background: #1b1f25;
+    box-shadow: 0 18px 36px rgb(0 0 0 / 38%);
 }
 
 .sortOption {
-    padding: 8px 10px;
+    padding: 10px;
     border: 0;
-    border-radius: 5px;
+    border-radius: 8px;
     background: transparent;
-    color: #555;
+    color: var(--text-primary);
     cursor: pointer;
     font: inherit;
+    font-size: 13px;
     text-align: left;
+    transition:
+        color 150ms ease,
+        background-color 150ms ease;
 }
 
 .sortOption:hover,
 .sortOption:focus-visible {
-    background: #e3f2fd;
-    color: #1976d2;
+    outline: none;
+    background: rgb(255 255 255 / 7%);
 }
 
 .sortOption:focus-visible {
-    outline: none;
-    box-shadow: inset 0 0 0 2px #1976d2;
+    box-shadow: var(--focus-ring);
 }
 
 .selectedSortOption {
-    background: #e3f2fd;
-    color: #1976d2;
+    background: rgb(215 174 99 / 12%);
+    color: var(--accent-hover);
     font-weight: 600;
 }
 
 .emptyState {
-    padding: 24px 16px;
-    border: 1px dashed #d6d6d6;
-    border-radius: 8px;
-    color: #777;
+    display: flex;
+    min-height: 220px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 20px;
+    border: 1px dashed rgb(255 255 255 / 14%);
+    border-radius: 14px;
+    color: var(--text-muted);
     text-align: center;
 }
 
+.emptyState svg {
+    width: 38px;
+    height: 38px;
+    margin-bottom: 16px;
+    color: var(--text-subdued);
+    stroke-width: 1.35;
+}
+
 .emptyState p {
-    margin: 0 0 4px;
-    color: #555;
-    font-weight: 600;
+    margin: 0 0 6px;
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 500;
 }
 
 .emptyState span {
-    font-size: 14px;
+    max-width: 24ch;
+    font-size: 13px;
+    line-height: 1.6;
 }
 
 .list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -171,19 +164,22 @@
 
 .dog {
     display: flex;
+    min-width: 0;
     flex: 1;
     align-items: center;
     gap: 12px;
-    min-width: 0;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: #fff;
-    font: inherit;
+    padding: 6px;
+    border: 1px solid rgb(255 255 255 / 8%);
+    border-radius: 12px;
+    background: rgb(255 255 255 / 3%);
+    color: var(--text-primary);
     cursor: pointer;
+    font: inherit;
+    text-align: left;
     transition:
-        background-color 0.2s ease,
-        border-color 0.2s ease;
+        border-color 180ms ease,
+        background-color 180ms ease,
+        transform 180ms ease;
 }
 
 .dog img {
@@ -191,54 +187,90 @@
     height: 64px;
     flex-shrink: 0;
     object-fit: cover;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 .dog span {
     overflow: hidden;
-    text-transform: capitalize;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
     text-overflow: ellipsis;
+    text-transform: capitalize;
     white-space: nowrap;
 }
 
-.dog:hover,
+.dog:hover:not(.selectedDog) {
+    border-color: rgb(255 255 255 / 16%);
+    background: rgb(255 255 255 / 6%);
+    transform: translateX(2px);
+}
+
 .selectedDog {
-    border-color: #1976d2;
-    background: #e3f2fd;
-}
-
-.removeButton {
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    background: #fff;
-    color: #555;
-    cursor: pointer;
-    transition:
-        color 0.2s ease,
-        background-color 0.2s ease,
-        border-color 0.2s ease;
-}
-
-.removeButton svg {
-    display: block;
-    width: 100%;
-    height: 100%;
-    fill: currentColor;
+    border-color: rgb(215 174 99 / 68%);
+    background: rgb(215 174 99 / 10%);
+    box-shadow: 0 0 0 1px rgb(215 174 99 / 14%) inset;
 }
 
 .dog:focus-visible,
 .removeButton:focus-visible {
     outline: none;
-    border-color: #1976d2;
-    box-shadow: 0 0 0 3px rgb(25 118 210 / 12%);
+    box-shadow: var(--focus-ring);
+}
+
+.removeButton {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-subdued);
+    cursor: pointer;
+    place-items: center;
+    transition:
+        color 180ms ease,
+        border-color 180ms ease,
+        background-color 180ms ease;
+}
+
+.removeButton svg {
+    width: 17px;
+    height: 17px;
+    stroke-width: 1.65;
 }
 
 .removeButton:hover:not(:disabled) {
-    color: #c62828;
-    background: #ffebee;
-    border-color: #c62828;
+    border-color: rgb(239 127 120 / 38%);
+    background: rgb(239 127 120 / 10%);
+    color: var(--destructive);
+}
+
+.dog:active,
+.removeButton:active:not(:disabled),
+.toolbarButton:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+@media (max-width: 768px) {
+    .header {
+        margin-bottom: 14px;
+    }
+
+    .emptyState {
+        min-height: 180px;
+    }
+
+    .dog img {
+        width: 58px;
+        height: 58px;
+    }
+
+    .toolbarButton,
+    .removeButton {
+        width: 44px;
+        height: 44px;
+    }
 }

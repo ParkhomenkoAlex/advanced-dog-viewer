@@ -3,27 +3,82 @@
 }
 
 :root {
-    font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
-    color: #222;
-    background: #f5f5f5;
+    --canvas: #0d0f12;
+    --surface: #15181d;
+    --surface-raised: #1b1f25;
+    --surface-muted: #22272e;
+    --text-primary: #f4f1eb;
+    --text-muted: #9ca3ad;
+    --text-subdued: #6f7782;
+    --accent: #d7ae63;
+    --accent-hover: #f0c979;
+    --border-subtle: rgb(255 255 255 / 9%);
+    --radius-control: 11px;
+    --radius-panel: 16px;
+    --shadow-ambient: 0 20px 60px rgb(0 0 0 / 24%);
+    --focus-ring: 0 0 0 3px rgb(215 174 99 / 24%);
+    --font-display: 'Iowan Old Style', Baskerville, Georgia, serif;
+    --font-ui:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        'Segoe UI', sans-serif;
+    color: var(--text-primary);
+    background: var(--canvas);
+    font-family: var(--font-ui);
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+    min-width: 320px;
+    background: var(--canvas);
+    scroll-behavior: smooth;
+}
+
 body {
+    min-width: 320px;
+    min-height: 100vh;
     margin: 0;
+    background:
+        radial-gradient(
+            circle at 12% -10%,
+            rgb(215 174 99 / 8%),
+            transparent 30rem
+        ),
+        radial-gradient(
+            circle at 88% 4%,
+            rgb(255 255 255 / 4%),
+            transparent 28rem
+        ),
+        var(--canvas);
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
 }
 
 #root {
-    width: 1126px;
-    max-width: 100%;
     min-height: 100vh;
-    margin: 0 auto;
 }
 
-h1,
-h2 {
-    text-align: center;
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }

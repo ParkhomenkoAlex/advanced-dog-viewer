@@ -1,141 +1,106 @@
 .filters {
     display: grid;
-    grid-template-columns: repeat(3, minmax(130px, 1fr)) auto;
-    gap: 16px;
-    align-items: end;
-    margin-bottom: 32px;
-    padding: 20px;
-    border: 1px solid #e5e5e5;
-    border-radius: 12px;
-    background: #fff;
+    grid-template-columns:
+        minmax(170px, 1.2fr) minmax(170px, 1.2fr) minmax(124px, 0.72fr)
+        auto;
+    gap: 10px;
+    align-items: center;
 }
 
 .field {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
     min-width: 0;
 }
 
-.field label {
-    color: #555;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.field select {
-    width: 100%;
-    height: 42px;
-    padding: 0 12px;
-    border: 1px solid #d6d6d6;
-    border-radius: 8px;
-    background: #fff;
-    color: #222;
-    font: inherit;
-    outline: none;
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-.field select:focus {
-    border-color: #1976d2;
-    box-shadow: 0 0 0 3px rgb(25 118 210 / 12%);
-}
-
-.field select {
-    appearance: none;
-    -webkit-appearance: none;
-    padding-right: 40px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23555' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.75'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
-    background-position: right 14px center;
-    background-repeat: no-repeat;
-    background-size: 16px;
-    cursor: pointer;
-}
-
-.field select:disabled {
-    background: #f5f5f5;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23999' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.75'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
-    background-position: right 14px center;
-    background-repeat: no-repeat;
-    background-size: 16px;
-    color: #999;
-    cursor: not-allowed;
+.fieldLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 .reset {
     display: flex;
-    align-items: flex-end;
 }
 
 .resetButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    display: grid;
+    width: 42px;
     height: 42px;
-    padding: 0 14px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: #fff;
-    color: #555;
-    font: inherit;
-    font-weight: 600;
-    white-space: nowrap;
+    padding: 0;
+    border: 1px solid rgb(255 255 255 / 8%);
+    border-radius: var(--radius-control);
+    background: rgb(13 15 18 / 28%);
+    color: var(--text-muted);
     cursor: pointer;
+    place-items: center;
     transition:
-        color 0.2s ease,
-        background-color 0.2s ease,
-        border-color 0.2s ease;
+        color 180ms ease,
+        border-color 180ms ease,
+        background-color 180ms ease,
+        transform 180ms ease;
 }
 
 .resetButton svg {
     width: 18px;
     height: 18px;
-    flex-shrink: 0;
-    fill: currentColor;
+    stroke-width: 1.75;
 }
 
 .resetButton:hover:not(:disabled) {
-    color: #1976d2;
-    background: #e3f2fd;
-    border-color: #1976d2;
+    border-color: rgb(215 174 99 / 52%);
+    background: rgb(215 174 99 / 8%);
+    color: var(--accent-hover);
+    transform: translateY(-1px);
 }
 
 .resetButton:focus-visible {
     outline: none;
-    border-color: #1976d2;
-    box-shadow: 0 0 0 3px rgb(25 118 210 / 12%);
+    box-shadow: var(--focus-ring);
 }
 
 .resetButton:disabled {
-    background: #f5f5f5;
-    color: #aaa;
+    color: var(--text-subdued);
     cursor: not-allowed;
+    opacity: 0.55;
 }
 
 @media (max-width: 1100px) {
     .filters {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+        padding-top: 2px;
+    }
+
+    .field:nth-child(3) {
+        grid-column: 1 / 2;
     }
 
     .reset {
-        grid-column: 1 / -1;
-    }
-
-    .resetButton {
-        width: 100%;
+        grid-column: 2 / 3;
+        justify-self: end;
     }
 }
 
 @media (max-width: 560px) {
     .filters {
-        grid-template-columns: 1fr;
-        padding: 16px;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+        padding-top: 2px;
+    }
+
+    .field {
+        grid-column: 1 / -1;
+    }
+
+    .field:nth-child(3) {
+        grid-column: 1;
     }
 
     .reset {
-        grid-column: auto;
+        grid-column: 2;
+        grid-row: 3;
     }
 }

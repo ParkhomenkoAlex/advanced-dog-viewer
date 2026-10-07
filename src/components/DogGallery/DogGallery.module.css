@@ -1,45 +1,190 @@
 .dogGallery {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 16px;
+    position: relative;
+    min-width: 0;
+}
+
+.filmstrip {
+    display: flex;
+    gap: 12px;
+    padding: 4px 2px 12px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-behavior: smooth;
+    scroll-snap-type: inline mandatory;
+    scrollbar-color: rgb(255 255 255 / 22%) transparent;
+    scrollbar-width: thin;
+}
+
+.filmstrip.centered {
+    justify-content: center;
+}
+
+.filmstrip::-webkit-scrollbar {
+    height: 5px;
+}
+
+.filmstrip::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgb(255 255 255 / 22%);
 }
 
 .dogThumbnail {
-    min-width: 0;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background: #fff;
+    position: relative;
+    width: clamp(76px, 8vw, 104px);
+    aspect-ratio: 0.82;
+    flex: 0 0 auto;
+    padding: 0;
     overflow: hidden;
-    font: inherit;
+    border: 1px solid rgb(255 255 255 / 12%);
+    border-radius: 10px;
+    background: var(--surface-raised);
+    color: var(--text-primary);
     cursor: pointer;
+    scroll-snap-align: start;
     transition:
-        background-color 0.2s ease,
-        border-color 0.2s ease;
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        transform 180ms ease;
 }
 
 .dogThumbnail img {
     display: block;
     width: 100%;
-    height: 120px;
+    height: 100%;
     object-fit: cover;
-    border-radius: 6px;
+    transition: filter 180ms ease;
 }
 
 .dogThumbnail span {
-    display: block;
-    margin-top: 8px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 18px 7px 7px;
+    overflow: hidden;
+    background: linear-gradient(transparent, rgb(0 0 0 / 78%));
+    color: var(--text-primary);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.2;
+    opacity: 0;
+    text-align: left;
+    text-overflow: ellipsis;
     text-transform: capitalize;
+    transition: opacity 180ms ease;
+    white-space: nowrap;
 }
 
-.dogThumbnail:hover,
+.dogThumbnail:hover:not(.selectedDog),
+.dogThumbnail:focus-visible:not(.selectedDog) {
+    border-color: rgb(215 174 99 / 58%);
+    transform: translateY(-2px);
+}
+
+.dogThumbnail:active:not(.selectedDog) {
+    transform: scale(0.97);
+}
+
+.dogThumbnail:hover img,
+.dogThumbnail:focus-visible img {
+    filter: brightness(1.08);
+}
+
+.dogThumbnail:hover span,
+.dogThumbnail:focus-visible span,
+.selectedDog span {
+    opacity: 1;
+}
+
+.dogThumbnail:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
 .selectedDog {
-    border-color: #1976d2;
-    background: #e3f2fd;
+    border-color: var(--accent);
+    box-shadow:
+        0 0 0 1px rgb(215 174 99 / 72%),
+        0 8px 24px rgb(0 0 0 / 32%);
+    transform: translateY(-2px);
+}
+
+.selectedDog img {
+    filter: brightness(1.05);
+}
+
+.navigationButton {
+    position: absolute;
+    top: calc(50% - 6px);
+    z-index: 1;
+    display: grid;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid rgb(255 255 255 / 18%);
+    border-radius: 50%;
+    background: rgb(13 15 18 / 74%);
+    color: var(--text-primary);
+    cursor: pointer;
+    place-items: center;
+    transform: translateY(-50%);
+    transition:
+        color 180ms ease,
+        border-color 180ms ease,
+        background-color 180ms ease,
+        opacity 180ms ease;
+}
+
+.navigationButton svg {
+    width: 19px;
+    height: 19px;
+    stroke-width: 1.75;
+}
+
+.previousButton {
+    left: 8px;
+}
+
+.nextButton {
+    right: 8px;
+}
+
+.navigationButton:hover:not(:disabled) {
+    border-color: rgb(215 174 99 / 62%);
+    background: rgb(13 15 18 / 90%);
+    color: var(--accent-hover);
+}
+
+.navigationButton:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.navigationButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+}
+
+.navigationButton:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.96);
 }
 
 @media (max-width: 768px) {
-    .dogGallery {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .filmstrip {
+        gap: 10px;
+        padding-bottom: 10px;
+    }
+
+    .dogThumbnail {
+        width: clamp(72px, 23vw, 92px);
+        border-radius: 9px;
+    }
+
+    .previousButton {
+        left: 6px;
+    }
+
+    .nextButton {
+        right: 6px;
     }
 }
