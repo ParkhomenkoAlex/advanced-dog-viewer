@@ -81,6 +81,10 @@
     transform: translateY(-2px);
 }
 
+.dogThumbnail:active:not(.selectedDog) {
+    transform: scale(0.97);
+}
+
 .dogThumbnail:hover img,
 .dogThumbnail:focus-visible img {
     filter: brightness(1.08);
@@ -114,8 +118,8 @@
     top: calc(50% - 6px);
     z-index: 1;
     display: grid;
-    width: 38px;
-    height: 38px;
+    width: 44px;
+    height: 44px;
     padding: 0;
     border: 1px solid rgb(255 255 255 / 18%);
     border-radius: 50%;
@@ -159,6 +163,10 @@
 .navigationButton:disabled {
     cursor: not-allowed;
     opacity: 0.35;
+}
+
+.navigationButton:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.96);
 }
 
 @media (max-width: 768px) {

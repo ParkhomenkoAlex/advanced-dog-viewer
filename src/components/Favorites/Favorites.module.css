@@ -248,6 +248,12 @@
     color: var(--destructive);
 }
 
+.dog:active,
+.removeButton:active:not(:disabled),
+.toolbarButton:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
 @media (max-width: 768px) {
     .header {
         margin-bottom: 14px;
@@ -260,5 +266,11 @@
     .dog img {
         width: 58px;
         height: 58px;
+    }
+
+    .toolbarButton,
+    .removeButton {
+        width: 44px;
+        height: 44px;
     }
 }

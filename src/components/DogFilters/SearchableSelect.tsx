@@ -1,4 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import {
+    useEffect,
+    useRef,
+    useState,
+    type KeyboardEvent as ReactKeyboardEvent,
+} from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 import styles from './SearchableSelect.module.css';
 
@@ -54,13 +59,104 @@ function SearchableSelect({
         closeDropdown();
     }
 
+    function focusOption(index: number) {
+        const optionButtons = Array.from(
+            selectRef.current?.querySelectorAll<HTMLButtonElement>(
+                '[role="option"]',
+            ) ?? [],
+        );
+
+        if (optionButtons.length === 0) {
+            return;
+        }
+
+        const normalizedIndex =
+            ((index % optionButtons.length) + optionButtons.length) %
+            optionButtons.length;
+        optionButtons[normalizedIndex]?.focus();
+    }
+
+    function focusSelectedOption() {
+        const optionButtons = Array.from(
+            selectRef.current?.querySelectorAll<HTMLButtonElement>(
+                '[role="option"]',
+            ) ?? [],
+        );
+        const selectedIndex = optionButtons.findIndex(
+            (optionButton) =>
+                optionButton.getAttribute('aria-selected') === 'true',
+        );
+
+        focusOption(selectedIndex >= 0 ? selectedIndex : 0);
+    }
+
+    function handleTriggerKeyDown(
+        event: ReactKeyboardEvent<HTMLButtonElement>,
+    ) {
+        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') {
+            return;
+        }
+
+        event.preventDefault();
+
+        if (isOpen) {
+            focusOption(event.key === 'ArrowDown' ? 0 : -1);
+            return;
+        }
+
+        setIsOpen(true);
+
+        if (!isSearchable) {
+            window.requestAnimationFrame(() => focusSelectedOption());
+        }
+    }
+
+    function handleSearchKeyDown(event: ReactKeyboardEvent<HTMLInputElement>) {
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            focusOption(event.key === 'ArrowDown' ? 0 : -1);
+        }
+    }
+
+    function handleOptionsKeyDown(event: ReactKeyboardEvent<HTMLUListElement>) {
+        const optionButtons = Array.from(
+            event.currentTarget.querySelectorAll<HTMLButtonElement>(
+                '[role="option"]',
+            ),
+        );
+        const currentIndex = optionButtons.indexOf(
+            document.activeElement as HTMLButtonElement,
+        );
+
+        if (currentIndex === -1 || optionButtons.length === 0) {
+            return;
+        }
+
+        if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            focusOption(currentIndex + 1);
+        } else if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            focusOption(currentIndex - 1);
+        } else if (event.key === 'Home') {
+            event.preventDefault();
+            focusOption(0);
+        } else if (event.key === 'End') {
+            event.preventDefault();
+            focusOption(-1);
+        }
+    }
+
     useEffect(() => {
         if (!isOpen) {
             return;
         }
 
         function handlePointerDown(event: PointerEvent) {
-            if (!selectRef.current?.contains(event.target as Node)) {
+            if (
+                event.target instanceof Node &&
+                !selectRef.current?.contains(event.target)
+            ) {
                 closeDropdown();
             }
         }
@@ -91,11 +187,13 @@ function SearchableSelect({
                 className={styles.trigger}
                 type="button"
                 role="combobox"
+                aria-label={label}
                 aria-expanded={isOpen}
                 aria-controls={listboxId}
                 aria-haspopup="listbox"
                 disabled={disabled}
                 onClick={() => setIsOpen((currentIsOpen) => !currentIsOpen)}
+                onKeyDown={handleTriggerKeyDown}
             >
                 <span>{selectedOption?.label ?? allOptionLabel}</span>
                 <ChevronDown aria-hidden="true" />
@@ -116,6 +214,7 @@ function SearchableSelect({
                                 onChange={(event) =>
                                     setSearchTerm(event.target.value)
                                 }
+                                onKeyDown={handleSearchKeyDown}
                             />
                         </div>
                     )}
@@ -124,6 +223,7 @@ function SearchableSelect({
                         id={listboxId}
                         className={styles.options}
                         role="listbox"
+                        onKeyDown={handleOptionsKeyDown}
                     >
                         {allOptionLabel && (
                             <li>

@@ -137,6 +137,11 @@
     transform: translateY(-1px);
 }
 
+.favoriteButton:active,
+.navigationButton:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
 .navigationButton:hover:not(:disabled) {
     border-color: var(--accent);
     background: rgb(13 15 18 / 76%);

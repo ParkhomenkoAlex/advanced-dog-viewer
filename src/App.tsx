@@ -1,5 +1,11 @@
 import { useCallback, useRef, useState } from 'react';
-import { Heart, RefreshCw } from 'lucide-react';
+import {
+    AlertCircle,
+    Heart,
+    ImageOff,
+    LoaderCircle,
+    RefreshCw,
+} from 'lucide-react';
 import DogFilters from './components/DogFilters/DogFilters';
 import DogGallery from './components/DogGallery/DogGallery';
 import Favorites from './components/Favorites/Favorites';
@@ -187,21 +193,41 @@ function App() {
             </div>
 
             {breedsError && (
-                <p className={styles.error} role="alert">
+                <p className={styles.statusMessage} role="alert">
+                    <AlertCircle aria-hidden="true" />
                     Failed to load breeds: {breedsError.message}
                 </p>
             )}
 
-            {isLoading && <p aria-live="polite">Loading dogs...</p>}
+            {isLoading && (
+                <section className={styles.statePanel} aria-live="polite">
+                    <LoaderCircle
+                        className={styles.stateSpinner}
+                        aria-hidden="true"
+                    />
+                    <h2>Loading dogs</h2>
+                    <p>Preparing your gallery.</p>
+                </section>
+            )}
 
             {error && (
-                <p className={styles.error} role="alert">
-                    Failed to load dogs: {error.message}
-                </p>
+                <section className={styles.statePanel} role="alert">
+                    <AlertCircle aria-hidden="true" />
+                    <h2>Unable to load dogs</h2>
+                    <p>{error.message}</p>
+                    <button
+                        className={styles.stateAction}
+                        type="button"
+                        onClick={handleRefreshDogs}
+                    >
+                        Try again
+                    </button>
+                </section>
             )}
 
             {loadMoreError && (
-                <p className={styles.error} role="alert">
+                <p className={styles.statusMessage} role="alert">
+                    <AlertCircle aria-hidden="true" />
                     Failed to load more dogs: {loadMoreError.message}
                 </p>
             )}
@@ -209,29 +235,57 @@ function App() {
             {!isLoading && !error && (
                 <div className={styles.layout}>
                     <div className={styles.content}>
-                        <DogGallery
-                            dogs={dogs}
-                            selectedDog={currentDog}
-                            onSelectDog={setSelectedDog}
-                        />
+                        {dogs.length === 0 ? (
+                            <section className={styles.emptyGallery}>
+                                <ImageOff aria-hidden="true" />
+                                <h2>No dogs found</h2>
+                                <p>Try refreshing or adjusting the filters.</p>
+                                <button
+                                    className={styles.stateAction}
+                                    type="button"
+                                    onClick={handleRefreshDogs}
+                                >
+                                    Refresh dogs
+                                </button>
+                            </section>
+                        ) : (
+                            <>
+                                <DogGallery
+                                    dogs={dogs}
+                                    selectedDog={currentDog}
+                                    onSelectDog={setSelectedDog}
+                                />
 
-                        <div className={styles.galleryActions}>
-                            <button
-                                className={styles.loadMoreButton}
-                                type="button"
-                                disabled={isLoadingMore || isLoadMoreDisabled}
-                                onClick={() => void loadMoreDogs()}
-                            >
-                                {isLoadingMore ? 'Loading...' : 'Load More'}
-                            </button>
+                                <div className={styles.galleryActions}>
+                                    <button
+                                        className={styles.loadMoreButton}
+                                        type="button"
+                                        aria-busy={isLoadingMore}
+                                        disabled={
+                                            isLoadingMore || isLoadMoreDisabled
+                                        }
+                                        onClick={() => void loadMoreDogs()}
+                                    >
+                                        {isLoadingMore && (
+                                            <LoaderCircle
+                                                className={styles.buttonSpinner}
+                                                aria-hidden="true"
+                                            />
+                                        )}
+                                        {isLoadingMore
+                                            ? 'Loading...'
+                                            : 'Load More'}
+                                    </button>
 
-                            {availableDogsCount !== null && (
-                                <p className={styles.galleryStatus}>
-                                    Showing {dogs.length} of{' '}
-                                    {availableDogsCount}
-                                </p>
-                            )}
-                        </div>
+                                    {availableDogsCount !== null && (
+                                        <p className={styles.galleryStatus}>
+                                            Showing {dogs.length} of{' '}
+                                            {availableDogsCount}
+                                        </p>
+                                    )}
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             )}
